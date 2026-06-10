@@ -33,7 +33,7 @@
 
     <div style="display: flex; flex-direction: column; gap: 20px;">
 
-      <div style="background: white; border-radius: 16px; border: 1px solid #e7e5e4; padding: 24px; box-shadow: 0 1px 6px rgba(0,0,0,0.04);">
+      <div class="glass-panel" style="padding: 24px;">
         <h3 style="margin: 0 0 20px; font-size: 17px; font-weight: 700; color: #1c1917;">Account Info</h3>
         <div style="display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px;">
           <div style="display: flex; align-items: flex-start; gap: 12px; font-size: 14px; color: #57534e;">
@@ -55,7 +55,7 @@
         </button>
       </div>
 
-      <div style="background: #fdf8f3; border-radius: 16px; padding: 24px; border: 1px solid #ede8df;">
+      <div class="glass-panel" style="padding: 24px;">
         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c8a96e" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
           <span style="font-size: 13px; font-weight: 700; color: #92683a; letter-spacing: 0.02em;">Impact Score</span>
@@ -85,7 +85,6 @@
           <span style="display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 5px; background: #e7e5e4; border-radius: 99px; font-size: 11px; font-weight: 700; color: #57534e; margin-left: 6px;">12</span>
           <span id="profile-saved-count" style="display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 5px; background: #e7e5e4; border-radius: 99px; font-size: 11px; font-weight: 700; color: #57534e; margin-left: 6px;">0</span>
         </button>
-        <button class="profile-tab" data-tab="preferences" style="padding: 0 4px 14px; font-weight: 600; font-size: 15px; color: #78716c; border: none; background: transparent; border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap;">Preferences</button>
       </div>
 
       <div id="tab-purchase" class="tab-content" style="display: block;">
@@ -95,7 +94,7 @@
       </div>
 
       <div id="tab-selling" class="tab-content" style="display: none;">
-        <div style="background: white; border-radius: 12px; border: 1px solid #e7e5e4; padding: 60px 40px; text-align: center;">
+        <div class="glass-panel" style="padding: 60px 40px; text-align: center;">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#d6d3d1" stroke-width="2" style="margin-bottom: 16px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
           <h3 style="margin: 0 0 8px; font-size: 18px; color: #1c1917;">No Sales Yet</h3>
           <p style="color: #78716c; margin: 0;">You haven't sold any items yet.</p>
@@ -117,22 +116,6 @@
       <div id="tab-offers" class="tab-content" style="display: none;">
         <div id="profile-offers-list" style="display: flex; flex-direction: column; gap: 16px;">
           <!-- Offers dynamically inserted here -->
-        </div>
-      </div>
-
-      <div id="tab-preferences" class="tab-content" style="display: none;">
-        <div style="background: white; border-radius: 16px; border: 1px solid #e7e5e4; padding: 32px;">
-          <h3 style="font-size: 18px; margin: 0 0 24px; font-weight: 700;">Preferences</h3>
-          <div style="display: flex; flex-direction: column; gap: 20px;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <div><div style="font-weight: 600; font-size: 15px;">Email Notifications</div><div style="font-size: 13px; color: #78716c;">Order updates &amp; recommendations</div></div>
-              <div style="width: 44px; height: 24px; background: #3d5a30; border-radius: 99px; position: relative; cursor: pointer;"><div style="width: 20px; height: 20px; background: white; border-radius: 50%; position: absolute; right: 2px; top: 2px;"></div></div>
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <div><div style="font-weight: 600; font-size: 15px;">Currency</div></div>
-              <select style="border: none; background: transparent; font-size: 15px; font-weight: 600; color: #78716c; outline: none; cursor: pointer;"><option>USD ($)</option><option>EUR (€)</option></select>
-            </div>
-          </div>
         </div>
       </div>
 

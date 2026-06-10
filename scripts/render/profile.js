@@ -238,8 +238,7 @@ export async function renderProfile() {
               }
               
               return `
-                <div class="purchase-item-card" data-product-id="${item.product_id}" data-order-id="${order.id}" data-status="${sanitize(statusDisplay)}" style="background:white;border:1px solid #e7e5e4;border-radius:12px;
-                            overflow:hidden;cursor:pointer;">
+                <div class="purchase-item-card glass-panel" data-product-id="${item.product_id}" data-order-id="${order.id}" data-status="${sanitize(statusDisplay)}" style="overflow:hidden;cursor:pointer;transition:0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
                   <div style="position:relative;">
                     <img src="${sanitize(imgUrl)}"
                          style="width:100%;aspect-ratio:4/3;object-fit:cover;"
@@ -323,8 +322,7 @@ export async function renderProfile() {
                    </span>`;
 
               return `
-                <div class="selling-item-card" data-product-id="${p.id}" style="background:white;border:1px solid #e7e5e4;border-radius:12px;
-                            overflow:hidden;cursor:pointer;">
+                <div class="selling-item-card glass-panel" data-product-id="${p.id}" style="overflow:hidden;cursor:pointer;transition:0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
                   <div style="position:relative;">
                     <img src="${sanitize(p.image_url || '')}"
                          style="width:100%;aspect-ratio:4/3;object-fit:cover;"
@@ -368,8 +366,8 @@ export async function renderProfile() {
         console.error("Error fetching my offers", myOffersErr);
       } else if (!myOffers || myOffers.length === 0) {
         offersList.innerHTML = `
-          <div style="text-align:center;padding:48px 0;color:#78716c;background:white;border-radius:12px;border:1px solid #e7e5e4;">
-            <div style="margin-bottom:16px;color:#c8c6c0;"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></div>
+          <div class="glass-panel" style="text-align:center;padding:48px 0;color:#78716c;">
+            <div style="margin-bottom:16px;color:#3d5a30;"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></div>
             <div style="font-weight:600;font-size:16px;margin-bottom:4px;color:#1c1917;">No offers made</div>
             <div style="font-size:14px;">Offers you send to sellers will appear here.</div>
           </div>
@@ -389,7 +387,7 @@ export async function renderProfile() {
           const st = statusMap[offer.status] || statusMap.pending;
 
           return `
-            <div style="background:white;border:1px solid #e7e5e4;border-radius:12px;padding:20px;display:flex;align-items:center;gap:20px;">
+            <div class="glass-panel" style="padding:20px;display:flex;align-items:center;gap:20px;transition:0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
               <img src="${sanitize(imgUrl)}" style="width:64px;height:64px;border-radius:8px;object-fit:cover;" onerror="this.style.display='none'">
               <div style="flex:1;">
                 <h4 style="margin:0 0 4px;font-size:15px;color:#1c1917;">${sanitize(productTitle)}</h4>
@@ -410,15 +408,15 @@ export async function renderProfile() {
     if (draftsGrid) {
       if (draftListings.length === 0) {
         draftsGrid.parentElement.innerHTML = `
-          <div style="text-align:center;padding:48px 0;color:#78716c;background:white;border-radius:12px;border:1px solid #e7e5e4;">
-            <div style="margin-bottom:16px;color:#c8c6c0;"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></div>
+          <div class="glass-panel" style="text-align:center;padding:48px 0;color:#78716c;">
+            <div style="margin-bottom:16px;color:#3d5a30;"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></div>
             <div style="font-weight:600;font-size:16px;margin-bottom:4px;color:#1c1917;">No drafts</div>
             <div style="font-size:14px;">Items you save as draft will appear here.</div>
           </div>`;
       } else {
         draftsGrid.innerHTML = draftListings.map(p => `
-          <div style="background:white;border-radius:14px;border:1px dashed #c8c6c0;overflow:hidden;opacity:0.8;transition:0.2s;cursor:pointer;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'">
-            <div style="aspect-ratio:4/3;background:#f5f5f4;position:relative;">
+          <div class="glass-panel" style="overflow:hidden;opacity:0.8;transition:0.2s;cursor:pointer;" onmouseover="this.style.opacity='1'; this.style.transform='translateY(-2px)'" onmouseout="this.style.opacity='0.8'; this.style.transform='none'">
+            <div style="aspect-ratio:4/3;background:rgba(255, 255, 255, 0.5);position:relative;">
               ${p.image_url ? `<img src="${p.image_url}" style="width:100%;height:100%;object-fit:cover;">` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#a8a29e;">No Image</div>`}
               <div style="position:absolute;top:10px;right:10px;background:white;font-size:11px;font-weight:700;padding:4px 8px;border-radius:4px;box-shadow:0 2px 4px rgba(0,0,0,0.1);">DRAFT</div>
             </div>
@@ -459,8 +457,7 @@ export async function renderProfile() {
             const p = f.products;
             if (!p) return '';
             return `
-              <div class="saved-item-card" data-product-id="${p.id}" style="background:white;border-radius:12px;border:1px solid #e7e5e4;
-                          padding:16px;cursor:pointer;">
+              <div class="saved-item-card glass-panel" data-product-id="${p.id}" style="padding:16px;cursor:pointer;transition:0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
                 <img src="${sanitize(p.image_url || '')}"
                      style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;margin-bottom:12px;"
                      onerror="this.style.background='#f5f5f4';this.removeAttribute('src')">
