@@ -23,22 +23,22 @@ export async function callGeminiAPI(key, base64Image, categoryHint = 'Furniture'
   }
   const base64Data = base64Image.includes(',') ? base64Image.split(',')[1] : base64Image;
 
-  const prompt = `You are an expert luxury furniture appraiser. Analyze this image. 
+  const prompt = `You are an expert luxury furniture appraiser. Analyze this image and estimate its real market value.
   Category context: ${categoryHint}. Condition context: ${conditionHint}. 
-  Return ONLY a raw JSON object with no markdown formatting. The JSON must have these exact keys:
+  Return ONLY a raw JSON object. Do NOT copy the placeholder values below; you MUST provide your own realistic estimates based on the image. The JSON must have these exact keys:
   {
-    "title": "A short, elegant title for the item",
-    "price": 1250,
-    "description": "A sophisticated 2-sentence description of the item and its design legacy.",
-    "maker": "Designer or Brand",
+    "title": "<A short, elegant title for the item>",
+    "price": <numeric value representing your estimated retail price in USD, e.g. 850>,
+    "description": "<A sophisticated 2-sentence description of the item and its design legacy.>",
+    "maker": "<Designer or Brand>",
     "category": "${categoryHint}",
     "condition": "${conditionHint}",
-    "estimated_fair_price": 1200,
-    "price_accuracy_note": "A short note like 'Within 3% of market average'",
-    "market_sentiment": "Short sentiment phrase like 'Strong Demand' or 'Steady'",
-    "market_insights": ["Insight 1 Title: Insight 1 Description", "Insight 2 Title: Insight 2 Description"],
-    "eco_score": 95,
-    "eco_offset": 45
+    "estimated_fair_price": <numeric value representing fair market average in USD, e.g. 820>,
+    "price_accuracy_note": "<A short note like 'Within 3% of market average'>",
+    "market_sentiment": "<Short sentiment phrase like 'Strong Demand' or 'Steady'>",
+    "market_insights": ["<Insight 1 Title: Insight 1 Description>", "<Insight 2 Title: Insight 2 Description>"],
+    "eco_score": <numeric value between 1 and 100>,
+    "eco_offset": <numeric value of CO2 offset in kg>
   }`;
 
   const requestBody = {
