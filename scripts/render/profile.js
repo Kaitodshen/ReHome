@@ -203,7 +203,7 @@ export async function renderProfile() {
             <div style="font-size:14px;">Your order history will appear here.</div>
           </div>`;
       } else {
-        tabPurchases.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;">` + 
+        tabPurchases.innerHTML = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">` + 
           orders.flatMap(order => {
             return (order.order_items || [])
               .filter(item => item.delivery_status !== 'resold')
@@ -212,11 +212,11 @@ export async function renderProfile() {
               const isVaulted = deliveryStatus === 'vaulted';
               
               const statusDisplay = deliveryStatus;
-              const statusColor = deliveryStatus === 'delivered' ? '#15803d' : deliveryStatus === 'vaulted' ? '#854d0e' : '#1e40af';
-              const statusBg = deliveryStatus === 'delivered' ? '#f0faf5' : deliveryStatus === 'vaulted' ? '#fef9c3' : '#dbeafe';
               const imgUrl = item.products?.image_url || '';
+              const desc = item.products?.description || 'Curated pre-loved item.';
               
               let actionsHtml = '';
+              let trackingOrResell = '';
               if (isVaulted) {
                 const productData = {
                    title: item.title,
@@ -229,49 +229,46 @@ export async function renderProfile() {
                    quantity: item.quantity
                 };
                 
+                trackingOrResell = `<span style="font-size: 12px; color: #a8a29e; font-weight: 600; cursor: pointer;" onmouseover="this.style.color='#3d5a30'" onmouseout="this.style.color='#a8a29e'">Re-sell Item</span>`;
+                
                 actionsHtml = `
-                  <div style="display: flex; gap: 8px; margin-top: 12px;">
-                    <button class="btn-deliver-vault" data-item-id="${item.id}" style="flex: 1; padding: 8px; background: #3d5a30; color: white; border: none; border-radius: 6px; font-weight: 600; font-size: 12px; cursor: pointer;">Deliver</button>
-                    <button class="btn-resell-vault" data-item-id="${item.id}" data-product='${sanitize(JSON.stringify(productData))}' style="flex: 1; padding: 8px; background: white; color: #1c1917; border: 1px solid #d6d3d1; border-radius: 6px; font-weight: 600; font-size: 12px; cursor: pointer;">Resell</button>
+                  <div style="display: flex; gap: 8px; margin-top: 16px;">
+                    <button class="btn-deliver-vault" data-item-id="${item.id}" style="flex: 1; padding: 10px; background: #3d5a30; color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer;">Deliver</button>
+                    <button class="btn-resell-vault" data-item-id="${item.id}" data-product='${sanitize(JSON.stringify(productData))}' style="flex: 1; padding: 10px; background: white; color: #1c1917; border: 1px solid #d6d3d1; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer;">Resell</button>
+                  </div>
+                `;
+              } else {
+                trackingOrResell = `
+                  <div style="position: relative; display: inline-block;" onmouseover="this.querySelector('.track-tooltip').style.opacity='1'; this.querySelector('.track-tooltip').style.visibility='visible'; this.querySelector('span').style.color='#3d5a30'" onmouseout="this.querySelector('.track-tooltip').style.opacity='0'; this.querySelector('.track-tooltip').style.visibility='hidden'; this.querySelector('span').style.color='#a8a29e'">
+                    <span style="font-size: 12px; color: #a8a29e; font-weight: 600; cursor: pointer; transition: 0.2s;">Track Order</span>
+                    <div class="track-tooltip" style="position: absolute; bottom: 100%; right: 0; margin-bottom: 8px; width: 220px; background: white; border: 1px solid #e7e5e4; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); padding: 16px; opacity: 0; visibility: hidden; transition: 0.2s; z-index: 10; text-align: left;">
+                      <div style="font-size: 10px; font-weight: 800; color: #3d5a30; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Delivery Progress</div>
+                      <div style="font-size: 14px; font-weight: 700; color: #1c1917; text-transform: capitalize; margin-bottom: 4px;">Status: ${sanitize(statusDisplay)}</div>
+                      <div style="font-size: 12px; color: #78716c;">Item is safely handled by our eco-logistics partner.</div>
+                    </div>
                   </div>
                 `;
               }
               
-              const hoverTrackingHtml = `
-                <div class="hover-tracking" style="position:absolute; inset:0; background:rgba(251,249,248,0.95); backdrop-filter:blur(4px); display:flex; flex-direction:column; justify-content:center; align-items:center; opacity:0; transition:opacity 0.2s; padding:16px; text-align:center; z-index:10;">
-                  <div style="font-size:11px; font-weight:800; color:#3d5a30; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">Tracking Progress</div>
-                  <div style="font-size:15px; font-weight:700; color:#1c1917; margin-bottom:8px; text-transform:capitalize;">Status: ${sanitize(statusDisplay)}</div>
-                  <div style="font-size:12px; color:#78716c;">Click to view item details</div>
-                </div>
-              `;
-
               return `
-                <div class="purchase-item-card glass-panel" data-product-id="${item.product_id}" data-order-id="${order.id}" data-status="${sanitize(statusDisplay)}" style="overflow:hidden;cursor:pointer;transition:0.2s;position:relative;" onmouseover="this.style.transform='translateY(-2px)'; this.querySelector('.hover-tracking').style.opacity='1'" onmouseout="this.style.transform='none'; this.querySelector('.hover-tracking').style.opacity='0'">
-                  ${hoverTrackingHtml}
-                  <div style="position:relative;">
-                    <img src="${sanitize(imgUrl)}"
-                         style="width:100%;aspect-ratio:4/3;object-fit:cover;"
-                         onerror="this.style.background='#f5f5f4';this.removeAttribute('src')">
-                    <div style="position:absolute;top:8px;right:8px;">
-                      <span style="background:${statusBg};color:${statusColor};padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600;border:1px solid ${statusBg};text-transform:capitalize;">${sanitize(statusDisplay)}</span>
+                <div class="purchase-item-card" data-product-id="${item.product_id}" data-order-id="${order.id}" data-status="${sanitize(statusDisplay)}" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid #f0ede8; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 30px rgba(0,0,0,0.08)'" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 20px rgba(0,0,0,0.03)'">
+                  <img src="${sanitize(imgUrl)}" style="width: 100%; height: 280px; object-fit: cover;" onerror="this.style.background='#f5f5f4';this.removeAttribute('src')">
+                  <div style="padding: 24px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                      <span style="background: #f5f4f0; color: #78716c; font-size: 11px; padding: 4px 10px; border-radius: 99px; font-weight: 700; text-transform: capitalize;">${sanitize(statusDisplay)}</span>
+                      <span style="font-size: 12px; color: #a8a29e; font-weight: 600;">${formatDate(order.created_at)}</span>
                     </div>
-                  </div>
-                  <div style="padding:12px;">
-                    <div class="purchase-title" style="font-weight:700;color:#1c1917;font-size:14px;
-                                white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                    <div class="purchase-title" style="font-size: 18px; font-weight: 700; color: #1c1917; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                       ${sanitize(item.title)}
                     </div>
-                    <div style="display:flex;justify-content:space-between;
-                                align-items:center;margin-top:8px;">
-                      <span class="purchase-price" style="color:#3d5a30;font-weight:600;font-size:14px;">
+                    <div style="font-size: 14px; color: #78716c; margin-bottom: 24px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                      ${sanitize(desc)}
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                      <span style="font-size: 16px; font-weight: 700; color: #1c1917;">
                         $${Number(item.price).toFixed(2)}
                       </span>
-                      <span style="color:#78716c;font-size:12px;">
-                        Qty: ${item.quantity}
-                      </span>
-                    </div>
-                    <div style="color:#a8a29e;font-size:11px;margin-top:4px;">
-                      Order #${sanitize(order.id.slice(0, 8).toUpperCase())} &bull; ${formatDate(order.created_at)}
+                      ${trackingOrResell}
                     </div>
                     ${actionsHtml}
                   </div>

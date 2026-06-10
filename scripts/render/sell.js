@@ -319,27 +319,23 @@ export async function renderSell() {
       const hasImg = !!imgSrc;
 
       return `
-        <div style="background: white; border-radius: 12px; overflow: hidden; border: 1px solid #e7e5e4; transition: 0.2s;" onmouseover="this.style.boxShadow='0 8px 24px rgba(0,0,0,0.09)'; this.style.transform='translateY(-3px)'" onmouseout="this.style.boxShadow='none'; this.style.transform='none'">
-           <div style="position: relative; height: 220px; background: #fbfaf9; overflow: hidden;">
-              ${hasImg ? `<img src="${sanitize(imgSrc)}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'">` : `<div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #a8a29e; font-size: 14px; font-weight: 600;">No Image</div>`}
-              <div style="position: absolute; top: 10px; left: 10px; background: ${sc.bg}; color: ${sc.color}; padding: 3px 10px; border-radius: 99px; font-size: 10px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase;">${sc.label}</div>
-              ${soldQty > 0 ? `<div style="position: absolute; top: 10px; right: 10px; background: #dcfce7; color: #166534; padding: 3px 10px; border-radius: 99px; font-size: 10px; font-weight: 800;">${soldQty} sold</div>` : ''}
+        <article style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.04); border: 1px solid rgba(197,200,188,0.4); display: flex; flex-direction: column; cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 12px 24px rgba(61,90,48,0.08)'" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.04)'">
+           <div style="position: relative; height: 260px; background: #f5f4f0; overflow: hidden; padding: 0;">
+              ${hasImg ? `<img src="${sanitize(imgSrc)}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'" onerror="this.style.display='none'">` : `<div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #a8a29e; font-size: 14px; font-weight: 600;">No Image</div>`}
+              <div style="position: absolute; top: 16px; left: 16px; background: ${sc.bg}; color: ${sc.color}; padding: 6px 14px; border-radius: 999px; font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">${sc.label}</div>
+              ${soldQty > 0 ? `<div style="position: absolute; top: 16px; right: 16px; background: #dcfce7; color: #166534; padding: 6px 14px; border-radius: 99px; font-size: 10px; font-weight: 800; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">${soldQty} sold</div>` : ''}
            </div>
-           <div style="padding: 16px;">
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
-                 <h4 style="margin: 0; font-size: 15px; font-weight: 700; color: #1c1917; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;">${sanitize(p.title)}</h4>
-                 <strong style="font-size: 15px; color: #526442; flex-shrink: 0;">$${Number(p.price).toFixed(0)}</strong>
+           <div style="display: flex; flex-direction: column; justify-content: space-between; padding: 20px; flex: 1;">
+              <div>
+                 <span style="font-size: 11px; font-weight: 800; color: #78716c; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 6px;">${sanitize(p.category)} &bull; ${sanitize(p.condition)}</span>
+                 <h3 style="font-size: 17px; margin: 0 0 12px 0; color: #1c1917; font-family: var(--sans, sans-serif); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${sanitize(p.title)}</h3>
               </div>
-              <div style="display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap;">
-                 <span style="background: #f5f5f4; padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; color: #78716c; text-transform: uppercase;">${sanitize(p.category)}</span>
-                 <span style="background: #f5f5f4; padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; color: #78716c; text-transform: uppercase;">${sanitize(p.condition)}</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e7e5e4; padding-top: 12px;">
-                 <span style="font-size: 12px; color: #a8a29e;">${formatDate(p.created_at)}</span>
-                 <button class="btn-edit-listing" data-id="${p.id}" style="background: none; border: none; font-size: 13px; font-weight: 700; color: #526442; cursor: pointer; transition: color 0.15s;" onmouseover="this.style.color='#3d5a30'" onmouseout="this.style.color='#526442'">Edit</button>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 16px; border-top: 1px solid rgba(197,200,188,0.3);">
+                 <strong style="font-size: 18px; color: #3d5a30; font-weight: 600;">$${Number(p.price).toFixed(0)}</strong>
+                 <button class="btn-edit-listing" data-id="${p.id}" style="background: none; border: none; font-size: 13px; font-weight: 700; color: #a8a29e; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#1c1917'" onmouseout="this.style.color='#a8a29e'">Edit Listing</button>
               </div>
            </div>
-        </div>`;
+        </article>`;
     }).join('');
 
     // New listing card

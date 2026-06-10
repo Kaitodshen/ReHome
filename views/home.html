@@ -41,7 +41,7 @@
   .rec-info h3 { font-size: 17px; margin: 0 0 12px 0; color: #1c1917; font-family: var(--sans, sans-serif); font-weight: 700; }
   .rec-info strong { font-size: 18px; color: #3d5a30; font-weight: 600; }
 
-  .treasure-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .treasure-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
   
   /* PERBAIKAN CURATED TREASURES: Box-sizing, Box-shadow, Hover Zoom, Smooth Gradient */
   .treasure-card { 
@@ -70,6 +70,10 @@
       background: rgba(15, 20, 15, 0.45); 
       z-index: 1; 
       pointer-events: none;
+  }
+  
+  .treasure-card.dark-overlay::before {
+      background: rgba(13, 23, 17, 0.85); 
   }
   
   .treasure-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; transition: transform 0.5s ease; display: block; }
@@ -176,17 +180,10 @@
         <button class="btn-glass" type="button" data-route="shop">Explore Lookbook</button>
       </div>
     </article>
-    <article class="treasure-card">
+    <article class="treasure-card dark-overlay">
       <img src="assets/design.jpg" alt="Textures">
       <div class="treasure-content">
         <span>CURATION</span><h3>Tactile Textures</h3>
-        <button class="btn-glass" type="button" data-route="shop">Explore Lookbook</button>
-      </div>
-    </article>
-    <article class="treasure-card">
-      <img src="assets/luxury.jpg" alt="Midnight">
-      <div class="treasure-content">
-        <span>LIMITED</span><h3>Midnight Serenity</h3>
         <button class="btn-glass" type="button" data-route="shop">Explore Lookbook</button>
       </div>
     </article>

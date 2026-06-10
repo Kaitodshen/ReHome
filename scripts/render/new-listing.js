@@ -264,7 +264,8 @@ export async function renderNewListing() {
   async function uploadImage(file) {
     if (!file) return null;
     const ext = file.name.split('.').pop();
-    const path = `${user.id}/${Date.now()}.${ext}`;
+    const randomStr = Math.random().toString(36).substring(2, 9);
+    const path = `${user.id}/${Date.now()}-${randomStr}.${ext}`;
     const { error } = await supabase.storage
       .from('product-images')
       .upload(path, file, { cacheControl: '3600', upsert: false });

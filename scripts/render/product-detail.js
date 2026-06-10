@@ -31,6 +31,7 @@ export async function renderProductDetail() {
           .eq('product_id', productId)
           .eq('orders.user_id', user.id)
           .eq('delivery_status', 'vaulted')
+          .limit(1)
           .maybeSingle();
        
        if (orderItemData) {
