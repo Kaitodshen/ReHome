@@ -5,7 +5,7 @@ export async function callGeminiAPI(key, base64Image, categoryHint = 'Furniture'
     if (modelsRes.ok) {
       const modelsData = await modelsRes.json();
       const availableModels = modelsData.models.map(m => m.name);
-      console.log("Available Gemini models:", availableModels);
+      // console.log("Available Gemini models:", availableModels);
       if (availableModels.includes("models/gemini-1.5-flash")) targetModel = "gemini-1.5-flash";
       else if (availableModels.includes("models/gemini-1.5-pro")) targetModel = "gemini-1.5-pro";
       else if (availableModels.includes("models/gemini-1.0-pro-vision-latest")) targetModel = "gemini-1.0-pro-vision-latest";
@@ -15,7 +15,7 @@ export async function callGeminiAPI(key, base64Image, categoryHint = 'Furniture'
     console.warn("Could not fetch models list, defaulting to gemini-1.5-flash");
   }
 
-  console.log("Using model:", targetModel);
+  // console.log("Using model:", targetModel);
 
   let mimeType = "image/jpeg";
   if (base64Image.startsWith("data:")) {
@@ -93,7 +93,7 @@ export async function callGeminiAPI(key, base64Image, categoryHint = 'Furniture'
   try {
     return JSON.parse(rawText);
   } catch (e) {
-    console.error("Gemini raw output:", rawText);
+    // console.error("Gemini raw output:", rawText);
     throw new Error("Failed to parse Gemini response as JSON");
   }
 }

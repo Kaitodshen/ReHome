@@ -40,11 +40,17 @@ export async function renderSellerProfile() {
     const shopName = profile.shop_name || profile.full_name || "Unknown Seller";
     document.getElementById("sp-name").textContent = sanitizeShortText(shopName);
     
+    const avatarImg = document.getElementById("sp-avatar");
+    const defaultAvatar = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d6d3d1'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>";
     if (profile.avatar_url) {
-      const avatarImg = document.getElementById("sp-avatar");
       if (avatarImg) {
         avatarImg.src = sanitizeUrl(profile.avatar_url);
-        avatarImg.style.display = "block";
+        avatarImg.classList.remove("hidden");
+      }
+    } else {
+      if (avatarImg) {
+        avatarImg.src = defaultAvatar;
+        avatarImg.classList.remove("hidden");
       }
     }
 

@@ -102,7 +102,7 @@ export function bindLoginPage() {
         if (result && result.needsEmailConfirmation) {
             if (errorMsg) {
                 errorMsg.style.color = "#3d5a30"; 
-                errorMsg.textContent = "Success! Please check your email to verify your account.";
+                errorMsg.textContent = "Account created successfully! Please sign in.";
             }
             setTimeout(() => {
                document.getElementById("register").hidden = true;

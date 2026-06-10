@@ -41,7 +41,8 @@ export async function renderNewListing() {
         if (resellData.title) { const el = form.querySelector('[name="title"]'); if (el) el.value = resellData.title; }
         if (resellData.description) { const el = form.querySelector('[name="description"]'); if (el) el.value = resellData.description; }
         if (resellData.price) { const el = form.querySelector('[name="price"]'); if (el) el.value = resellData.price; }
-        if (resellData.eco_offset) { const el = form.querySelector('[name="carbon_offset"]'); if (el) el.value = resellData.eco_offset; }
+        const offsetVal = resellData.carbon_offset || resellData.eco_offset;
+        if (offsetVal) { const el = form.querySelector('[name="carbon_offset"]'); if (el) el.value = offsetVal; }
         setSelectValue('category', resellData.category);
         setSelectValue('condition', resellData.condition);
 

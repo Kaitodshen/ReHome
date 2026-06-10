@@ -158,13 +158,135 @@ export async function renderCheckout() {
     if (elShip) elShip.textContent = shipping === 0 ? "Free" : "$" + shipping;
     if (elTot) elTot.textContent = "$" + total.toLocaleString();
 
+    // --- PAYMENT MOCKUP LOGIC ---
+    const payOptions = document.querySelectorAll('.pay-option');
+    const qrisModal = document.getElementById('qris-simulator-modal');
+    let paymentVerified = false;
+    let selectedMethod = 'cc';
+
+    // Reset button state
+    if (submitBtn) {
+      submitBtn.textContent = "Place Order Securely";
+      submitBtn.disabled = false;
+      submitBtn.style.background = "#3d5a30";
+      paymentVerified = false;
+    }
+
+    payOptions.forEach(opt => {
+      const radio = opt.querySelector('input[type="radio"]');
+      if (!radio) return;
+      radio.addEventListener('change', () => {
+        payOptions.forEach(o => o.classList.remove('selected'));
+        document.querySelectorAll('.pay-details').forEach(d => d.style.display = 'none');
+        
+        if (radio.checked) {
+          opt.classList.add('selected');
+          const detailsId = `pay-details-${radio.value}`;
+          const detailsEl = document.getElementById(detailsId);
+          if (detailsEl) detailsEl.style.display = 'block';
+          selectedMethod = radio.value;
+
+          if (selectedMethod === 'qris' || selectedMethod === 'va') {
+            paymentVerified = false;
+            if (submitBtn) {
+              submitBtn.textContent = "Waiting for Payment...";
+              submitBtn.disabled = true;
+              submitBtn.style.background = "#a8a29e";
+            }
+          } else {
+            paymentVerified = true;
+            if (submitBtn) {
+              submitBtn.textContent = "Place Order Securely";
+              submitBtn.disabled = false;
+              submitBtn.style.background = "#3d5a30";
+            }
+          }
+        }
+      });
+    });
+
+    // QRIS Simulator Logic
+    const btnScan = document.getElementById('btn-scan-qris');
+    const btnCancel = document.getElementById('btn-sim-cancel');
+    const btnPay = document.getElementById('btn-sim-pay');
+    const simAmount = document.getElementById('sim-amount');
+
+    // VA Simulator Logic
+    const vaDetails = document.getElementById('pay-details-va');
+    if (vaDetails) {
+      const copyBtn = vaDetails.querySelector('button');
+      if (copyBtn) {
+        copyBtn.addEventListener('click', () => {
+          copyBtn.textContent = "Copied!";
+          copyBtn.style.background = "#dcfce7";
+          copyBtn.style.color = "#166534";
+          
+          showToast("Virtual Account copied! Simulating payment...");
+          
+          // Simulate bank callback after 2 seconds
+          setTimeout(() => {
+            paymentVerified = true;
+            if (submitBtn) {
+              submitBtn.textContent = "Payment Verified ✅ - Complete Order";
+              submitBtn.disabled = false;
+              submitBtn.style.background = "#3d5a30";
+            }
+            showToast("Bank Transfer Verified!");
+            
+            const waitingText = vaDetails.querySelector('p:last-child');
+            if (waitingText) {
+              waitingText.innerHTML = '<span style="color:#166534; font-weight:700;">✅ Payment Received</span>';
+            }
+          }, 2000);
+        });
+      }
+    }
+
+    if (btnScan) {
+      btnScan.addEventListener('click', () => {
+        if (simAmount) simAmount.textContent = "$" + total.toLocaleString();
+        if (qrisModal) qrisModal.style.display = 'flex';
+      });
+    }
+
+    if (btnCancel) {
+      btnCancel.addEventListener('click', () => {
+        if (qrisModal) qrisModal.style.display = 'none';
+      });
+    }
+
+    if (btnPay) {
+      btnPay.addEventListener('click', () => {
+        if (qrisModal) qrisModal.style.display = 'none';
+        paymentVerified = true;
+        if (submitBtn) {
+          submitBtn.textContent = "Payment Verified ✅ - Complete Order";
+          submitBtn.disabled = false;
+          submitBtn.style.background = "#3d5a30";
+        }
+        showToast("Mock Payment Verified!");
+      });
+    }
+
     if (submitBtn && submitBtn.dataset.checkoutBound !== "true") {
       submitBtn.dataset.checkoutBound = "true";
       submitBtn.addEventListener("click", async () => {
+        if (!paymentVerified && selectedMethod !== 'cc') {
+          showToast("Please complete the payment process first.");
+          return;
+        }
+
         const originalText = submitBtn.textContent;
         submitBtn.disabled = true;
         submitBtn.textContent = "Processing...";
+        
         try {
+          // If credit card, simulate a brief loading state
+          if (selectedMethod === 'cc') {
+             submitBtn.textContent = "Authorizing Card...";
+             await new Promise(r => setTimeout(r, 1500));
+          }
+
           await checkoutCart();
           if (window.updateGlobalCartBadge) await window.updateGlobalCartBadge();
           navigate("confirmation");

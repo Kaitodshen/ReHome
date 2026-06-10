@@ -222,7 +222,8 @@ export async function renderSell() {
       offersGrid.innerHTML = offers.map(offer => {
         const buyer = profilesMap[offer.buyer_id] || {};
         const buyerName = buyer.full_name || 'Anonymous';
-        const buyerAvatar = buyer.avatar_url || '';
+        const defaultAvatar = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d6d3d1'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>";
+        const buyerAvatar = buyer.avatar_url || defaultAvatar;
         const productTitle = offer.products?.title || 'Unknown';
         const productPrice = Number(offer.products?.price || 0);
         const offerPrice = Number(offer.amount || 0);
@@ -264,14 +265,7 @@ export async function renderSell() {
           try {
             await supabase.from('offers').update({ status: 'accepted', updated_at: new Date().toISOString() }).eq('id', btn.dataset.offerId);
             
-            // Add to buyer's cart at offer price
-            const { error: cartErr } = await supabase.from('cart_items').upsert({
-              user_id: btn.dataset.buyerId,
-              product_id: btn.dataset.productId,
-              quantity: 1,
-            }, { onConflict: 'user_id,product_id' });
-            
-            showToast("Offer accepted! Item added to buyer's cart.");
+            showToast("Offer accepted! The buyer can now checkout at the agreed price.");
             loadOffers();
           } catch (err) { showToast('Error: ' + err.message); }
         });

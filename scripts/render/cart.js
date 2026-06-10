@@ -39,22 +39,39 @@ export async function renderCart() {
     }
 
     const loadItems = async () => {
-      const { data: cartItems, error } = await supabase
+      let { data: cartItems, error } = await supabase
         .from("cart_items")
         .select("*, products(*)")
         .eq("user_id", session.user.id)
         .order('created_at', { ascending: true });
 
       if (error) throw error;
+      cartItems = cartItems || [];
 
-      // Check for accepted offers to apply discounts
+      // Check for accepted offers to apply discounts & inject into cart
       const { data: offers } = await supabase
         .from("offers")
-        .select("product_id, amount")
+        .select("id, product_id, amount, products(*)")
         .eq("buyer_id", session.user.id)
         .eq("status", "accepted");
         
-      if (cartItems && offers && offers.length > 0) {
+      if (offers && offers.length > 0) {
+        // Find offers not in cart
+        const missingOffers = offers.filter(o => !cartItems.some(c => c.product_id === o.product_id));
+        
+        for (const o of missingOffers) {
+            if (o.products) {
+                cartItems.push({
+                    id: 'offer_' + o.id, // virtual ID
+                    user_id: session.user.id,
+                    product_id: o.product_id,
+                    quantity: 1,
+                    created_at: new Date().toISOString(),
+                    products: o.products
+                });
+            }
+        }
+
         cartItems.forEach(item => {
           const offer = offers.find(o => o.product_id === item.product_id);
           if (offer && item.products) {
@@ -65,7 +82,7 @@ export async function renderCart() {
         });
       }
 
-      return cartItems || [];
+      return cartItems;
     };
 
     let cartItems = await loadItems();

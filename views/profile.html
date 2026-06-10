@@ -60,8 +60,15 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c8a96e" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
           <span style="font-size: 13px; font-weight: 700; color: #92683a; letter-spacing: 0.02em;">Impact Score</span>
         </div>
-        <div id="profile-impact-score" style="font-size: 36px; font-weight: 700; color: #7a5528; margin-bottom: 4px;">2,450</div>
-        <p id="profile-impact-trees" style="margin: 0; font-size: 13px; color: #a37d4f; line-height: 1.5;">Equivalent to planting 14 trees through circular shopping.</p>
+        <div id="profile-impact-score" style="font-size: 36px; font-weight: 700; color: #7a5528; margin-bottom: 4px;">0</div>
+        <p id="profile-impact-trees" style="margin: 0; font-size: 13px; color: #a37d4f; line-height: 1.5;">Equivalent to planting 0 trees through circular shopping.</p>
+        
+        <hr style="border:none; border-top:1px dashed #e5dfd3; margin:20px 0;">
+        
+        <div style="font-size: 13px; font-weight: 700; color: #92683a; margin-bottom: 12px;">Eco Badges</div>
+        <div id="profile-badges" style="display:flex; gap:12px; flex-wrap:wrap;">
+           <!-- Badges injected by profile.js -->
+        </div>
       </div>
 
       <button id="profile-logout-btn" style="width: 100%; padding: 13px; background: transparent; border: 1px solid #fca5a5; color: #dc2626; font-weight: 700; font-size: 14px; cursor: pointer; border-radius: 8px; transition: 0.2s;" onmouseover="this.style.background='#fef2f2'" onmouseout="this.style.background='transparent'">Sign Out</button>
@@ -129,6 +136,65 @@
         </div>
       </div>
 
+    </div>
+  </div>
+
+  <!-- Order Tracking Modal -->
+  <div id="order-tracking-modal" style="display:none; position:fixed; inset:0; z-index:1000; background:rgba(28,25,23,0.8); backdrop-filter:blur(4px); align-items:center; justify-content:center;">
+    <div style="background:white; width:90%; max-width:480px; border-radius:24px; padding:32px; position:relative; box-shadow:0 20px 40px rgba(0,0,0,0.2);">
+      <button id="btn-close-tracking" style="position:absolute; top:20px; right:20px; background:none; border:none; cursor:pointer; color:#a8a29e; padding:4px;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+      
+      <h2 style="margin:0 0 8px; font-size:20px; font-weight:700; color:#1c1917;">Order Details</h2>
+      <p id="track-order-id" style="margin:0 0 24px; font-size:13px; color:#78716c;">Order #123456</p>
+      
+      <div style="display:flex; gap:16px; margin-bottom:32px; align-items:center; background:#fbfaf9; padding:16px; border-radius:16px;">
+        <img id="track-img" src="" style="width:64px; height:64px; object-fit:cover; border-radius:12px; background:#e7e5e4;">
+        <div>
+          <div id="track-title" style="font-weight:700; font-size:15px; color:#1c1917; margin-bottom:4px;">Product Name</div>
+          <div id="track-price" style="font-weight:600; font-size:14px; color:#526442;">$0.00</div>
+        </div>
+      </div>
+
+      <h3 style="margin:0 0 16px; font-size:15px; font-weight:700; color:#1c1917;">Tracking Status</h3>
+      <div style="position:relative; margin-left:12px;">
+        <!-- Vertical Line -->
+        <div style="position:absolute; top:8px; bottom:8px; left:6px; width:2px; background:#e7e5e4; z-index:1;"></div>
+        
+        <!-- Steps -->
+        <div style="display:flex; gap:16px; margin-bottom:24px; position:relative; z-index:2;">
+          <div style="width:14px; height:14px; border-radius:50%; background:#3d5a30; border:4px solid white; box-shadow:0 0 0 1px #3d5a30; flex-shrink:0;"></div>
+          <div style="margin-top:-3px;">
+            <div style="font-weight:700; font-size:14px; color:#1c1917;">Order Placed</div>
+            <div style="font-size:12px; color:#78716c; margin-top:2px;">Payment confirmed successfully.</div>
+          </div>
+        </div>
+        
+        <div style="display:flex; gap:16px; margin-bottom:24px; position:relative; z-index:2;">
+          <div style="width:14px; height:14px; border-radius:50%; background:#3d5a30; border:4px solid white; box-shadow:0 0 0 1px #3d5a30; flex-shrink:0;"></div>
+          <div style="margin-top:-3px;">
+            <div style="font-weight:700; font-size:14px; color:#1c1917;">Preparing Package</div>
+            <div style="font-size:12px; color:#78716c; margin-top:2px;">Seller is packing your item using eco-materials.</div>
+          </div>
+        </div>
+        
+        <div style="display:flex; gap:16px; margin-bottom:24px; position:relative; z-index:2;">
+          <div style="width:14px; height:14px; border-radius:50%; background:#e7e5e4; border:4px solid white; box-shadow:0 0 0 1px #e7e5e4; flex-shrink:0;" id="track-step-transit-dot"></div>
+          <div style="margin-top:-3px;">
+            <div style="font-weight:700; font-size:14px; color:#a8a29e;" id="track-step-transit-title">In Transit</div>
+            <div style="font-size:12px; color:#a8a29e; margin-top:2px;" id="track-step-transit-desc">Low-emission delivery in progress.</div>
+          </div>
+        </div>
+        
+        <div style="display:flex; gap:16px; position:relative; z-index:2;">
+          <div style="width:14px; height:14px; border-radius:50%; background:#e7e5e4; border:4px solid white; box-shadow:0 0 0 1px #e7e5e4; flex-shrink:0;" id="track-step-arrived-dot"></div>
+          <div style="margin-top:-3px;">
+            <div style="font-weight:700; font-size:14px; color:#a8a29e;" id="track-step-arrived-title">Delivered</div>
+            <div style="font-size:12px; color:#a8a29e; margin-top:2px;" id="track-step-arrived-desc">Package has safely arrived.</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

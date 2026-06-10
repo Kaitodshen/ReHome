@@ -84,8 +84,11 @@ export async function renderProfile() {
     const emailDisplay = document.getElementById("profile-email-display");
     const joinEl       = document.getElementById("profile-join-date");
 
-    if (profile.avatar_url && avatarImgEl) {
-      avatarImgEl.innerHTML = `<img src="${sanitize(profile.avatar_url)}" style="width:100%; height:100%; object-fit:cover;">`;
+    const defaultAvatar = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d6d3d1'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>";
+    
+    if (avatarImgEl) {
+      const avatarSrc = profile.avatar_url ? sanitize(profile.avatar_url) : defaultAvatar;
+      avatarImgEl.innerHTML = `<img src="${avatarSrc}" style="width:100%; height:100%; object-fit:cover;">`;
     } else if (initialEl) {
       initialEl.textContent = displayName.charAt(0).toUpperCase();
     }
@@ -110,6 +113,60 @@ export async function renderProfile() {
       if (treesEl) {
         const trees = Math.floor(score / 175);
         treesEl.textContent = `Equivalent to planting ${trees} trees through circular shopping.`;
+      }
+      
+      const badgesEl = document.getElementById("profile-badges");
+      if (badgesEl) {
+        let badgesHtml = '';
+        
+        // Badge 1: ReHome Pioneer (Everyone gets this)
+        badgesHtml += `
+          <div style="background:white; border:1px solid #e7e5e4; padding:8px 12px; border-radius:12px; display:flex; align-items:center; gap:8px;">
+            <div style="width:24px; height:24px; background:#fef9c3; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#854d0e;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg></div>
+            <div>
+              <div style="font-size:12px; font-weight:700; color:#1c1917; line-height:1;">Pioneer</div>
+              <div style="font-size:10px; color:#78716c; margin-top:2px;">Early Adopter</div>
+            </div>
+          </div>
+        `;
+        
+        // Badge 2: Carbon Saver (If score > 100)
+        if (score > 100) {
+          badgesHtml += `
+            <div style="background:white; border:1px solid #e7e5e4; padding:8px 12px; border-radius:12px; display:flex; align-items:center; gap:8px;">
+              <div style="width:24px; height:24px; background:#dcfce7; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#166534;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>
+              <div>
+                <div style="font-size:12px; font-weight:700; color:#1c1917; line-height:1;">Carbon Saver</div>
+                <div style="font-size:10px; color:#78716c; margin-top:2px;">100+ Impact</div>
+              </div>
+            </div>
+          `;
+        } else {
+          badgesHtml += `
+            <div style="background:#f5f5f4; border:1px dashed #d6d3d1; padding:8px 12px; border-radius:12px; display:flex; align-items:center; gap:8px; opacity:0.6;">
+              <div style="width:24px; height:24px; background:#e7e5e4; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#a8a29e;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></div>
+              <div>
+                <div style="font-size:12px; font-weight:700; color:#a8a29e; line-height:1;">Carbon Saver</div>
+                <div style="font-size:10px; color:#a8a29e; margin-top:2px;">Unlock at 100 pt</div>
+              </div>
+            </div>
+          `;
+        }
+
+        // Badge 3: Forest Maker (If score > 1000)
+        if (score > 1000) {
+          badgesHtml += `
+            <div style="background:white; border:1px solid #e7e5e4; padding:8px 12px; border-radius:12px; display:flex; align-items:center; gap:8px;">
+              <div style="width:24px; height:24px; background:#e0f2fe; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#0369a1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M16 12l-4-4-4 4"></path><path d="M12 16V8"></path></svg></div>
+              <div>
+                <div style="font-size:12px; font-weight:700; color:#1c1917; line-height:1;">Forest Maker</div>
+                <div style="font-size:10px; color:#78716c; margin-top:2px;">1000+ Impact</div>
+              </div>
+            </div>
+          `;
+        }
+        
+        badgesEl.innerHTML = badgesHtml;
       }
     }
 
@@ -181,7 +238,7 @@ export async function renderProfile() {
               }
               
               return `
-                <div class="purchase-item-card" data-product-id="${item.product_id}" style="background:white;border:1px solid #e7e5e4;border-radius:12px;
+                <div class="purchase-item-card" data-product-id="${item.product_id}" data-order-id="${order.id}" data-status="${sanitize(statusDisplay)}" style="background:white;border:1px solid #e7e5e4;border-radius:12px;
                             overflow:hidden;cursor:pointer;">
                   <div style="position:relative;">
                     <img src="${sanitize(imgUrl)}"
@@ -192,13 +249,13 @@ export async function renderProfile() {
                     </div>
                   </div>
                   <div style="padding:12px;">
-                    <div style="font-weight:700;color:#1c1917;font-size:14px;
+                    <div class="purchase-title" style="font-weight:700;color:#1c1917;font-size:14px;
                                 white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
                       ${sanitize(item.title)}
                     </div>
                     <div style="display:flex;justify-content:space-between;
                                 align-items:center;margin-top:8px;">
-                      <span style="color:#3d5a30;font-weight:600;font-size:14px;">
+                      <span class="purchase-price" style="color:#3d5a30;font-weight:600;font-size:14px;">
                         $${Number(item.price).toFixed(2)}
                       </span>
                       <span style="color:#78716c;font-size:12px;">
@@ -459,6 +516,87 @@ export async function renderProfile() {
         if (contentEl) contentEl.style.display = 'block';
       });
     });
+
+      // Bind purchase item click -> open tracking modal
+      document.querySelectorAll('.purchase-item-card').forEach(card => {
+        card.addEventListener('click', (e) => {
+          if (e.target.closest('button')) return; // Ignore if clicked on a button
+          
+          const modal = document.getElementById('order-tracking-modal');
+          if (!modal) return;
+          
+          // Get data from the card's DOM
+          const title = card.querySelector('.purchase-title')?.textContent || 'Product Name';
+          const price = card.querySelector('.purchase-price')?.textContent || '$0.00';
+          const imgUrl = card.querySelector('img')?.getAttribute('src') || '';
+          const status = card.dataset.status || 'delivered';
+          const orderId = card.dataset.orderId || '123456';
+          
+          // Populate Modal
+          document.getElementById('track-order-id').textContent = `Order #${orderId.substring(0,8).toUpperCase()}`;
+          document.getElementById('track-title').textContent = title;
+          document.getElementById('track-price').textContent = price;
+          document.getElementById('track-img').src = imgUrl;
+          
+          // Reset UI
+          const activeDot = 'border-radius:50%; background:#3d5a30; border:4px solid white; box-shadow:0 0 0 1px #3d5a30; flex-shrink:0; width:14px; height:14px;';
+          const inactiveDot = 'border-radius:50%; background:#e7e5e4; border:4px solid white; box-shadow:0 0 0 1px #e7e5e4; flex-shrink:0; width:14px; height:14px;';
+          
+          const tDot = document.getElementById('track-step-transit-dot');
+          const tTitle = document.getElementById('track-step-transit-title');
+          const tDesc = document.getElementById('track-step-transit-desc');
+          
+          const aDot = document.getElementById('track-step-arrived-dot');
+          const aTitle = document.getElementById('track-step-arrived-title');
+          const aDesc = document.getElementById('track-step-arrived-desc');
+          
+          // Determine state
+          if (status === 'shipped' || status === 'delivered') {
+             tDot.style = activeDot;
+             tTitle.style.color = '#1c1917';
+             tDesc.style.color = '#78716c';
+          } else {
+             tDot.style = inactiveDot;
+             tTitle.style.color = '#a8a29e';
+             tDesc.style.color = '#a8a29e';
+          }
+          
+          if (status === 'delivered') {
+             aDot.style = activeDot;
+             aTitle.style.color = '#1c1917';
+             aDesc.style.color = '#78716c';
+          } else {
+             aDot.style = inactiveDot;
+             aTitle.style.color = '#a8a29e';
+             aDesc.style.color = '#a8a29e';
+          }
+          
+          // Special case for Vaulted
+          if (status === 'vaulted') {
+            tTitle.textContent = 'Secured in Vault';
+            tDesc.textContent = 'Item is safe in our climate-controlled facility.';
+            tDot.style = activeDot;
+            tTitle.style.color = '#1c1917';
+            tDesc.style.color = '#78716c';
+            aTitle.textContent = 'Awaiting Delivery Request';
+            aDesc.textContent = 'You can request delivery or resell it anytime.';
+          } else {
+            tTitle.textContent = 'In Transit';
+            tDesc.textContent = 'Low-emission delivery in progress.';
+            aTitle.textContent = 'Delivered';
+            aDesc.textContent = 'Package has safely arrived.';
+          }
+          
+          modal.style.display = 'flex';
+        });
+      });
+      
+      const btnCloseTrack = document.getElementById('btn-close-tracking');
+      if (btnCloseTrack) {
+        btnCloseTrack.addEventListener('click', () => {
+          document.getElementById('order-tracking-modal').style.display = 'none';
+        });
+      }
 
     const setupCardNav = async (selector) => {
       document.querySelectorAll(selector).forEach(card => {

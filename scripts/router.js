@@ -44,13 +44,16 @@ export async function navigate(route) {
     container.innerHTML = viewCache[route];
     window.scrollTo({ top: 0, behavior: "auto" });
 
-    try {
-      const module = await import(`./render/${route}.js?t=${Date.now()}`);
-      const renderFunctionName = "render" + route.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('');
-      if (module[renderFunctionName]) module[renderFunctionName]();
-    } catch (e) {
-      if (!e.message.includes("Failed to fetch dynamically imported module")) {
-        console.error(`Router error executing ${route}.js:`, e);
+    const STATIC_ROUTES = ['shipping', 'returns', 'terms', 'help-center', 'contact', 'seller-guide'];
+    if (!STATIC_ROUTES.includes(route)) {
+      try {
+        const module = await import(`./render/${route}.js?t=${Date.now()}`);
+        const renderFunctionName = "render" + route.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('');
+        if (module[renderFunctionName]) module[renderFunctionName]();
+      } catch (e) {
+        if (!e.message.includes("Failed to fetch dynamically imported module")) {
+          console.error(`Router error executing ${route}.js:`, e);
+        }
       }
     }
 
