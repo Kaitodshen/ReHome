@@ -60,19 +60,49 @@ async function checkoutCart() {
   const { error: itemsError } = await supabase.from("order_items").insert(orderItems);
   if (itemsError) throw itemsError;
 
-  // Deduct stock and set sold status if 0
+  // Prepare arrays for RPC
+  const productIds = [];
+  const quantities = [];
   for (const item of cartItems) {
-    const p = item.products;
-    if (p && p.id) {
-      const q = clampInteger(item.quantity, 1, 99, 1);
-      const newStock = Math.max(0, (toSafeNumber(p.stock, 1)) - q);
-      const newStatus = newStock === 0 ? 'sold' : 'active';
-      
-      await supabase.from("products").update({
-        stock: newStock,
-        status: newStatus
-      }).eq("id", p.id);
+    if (item.products?.id) {
+      productIds.push(item.products.id);
+      quantities.push(clampInteger(item.quantity, 1, 99, 1));
     }
+  }
+
+  // Call the secure RPC to reduce stock bypassing RLS restrictions
+  if (productIds.length > 0) {
+    const { error: rpcError } = await supabase.rpc('reduce_stock_on_checkout', {
+      p_product_ids: productIds,
+      p_quantities: quantities
+    });
+    
+    // Fallback if RPC doesn't exist (user hasn't run the SQL yet)
+    if (rpcError) {
+      console.warn("RPC reduce_stock_on_checkout failed. Falling back to direct update:", rpcError);
+      for (const item of cartItems) {
+        const p = item.products;
+        if (p && p.id) {
+          const q = clampInteger(item.quantity, 1, 99, 1);
+          const newStock = Math.max(0, (toSafeNumber(p.stock, 1)) - q);
+          const newStatus = newStock === 0 ? 'sold' : 'active';
+          
+          await supabase.from("products").update({
+            stock: newStock,
+            status: newStatus
+          }).eq("id", p.id);
+        }
+      }
+    }
+  }
+  
+  // Mark used offers as completed so they cannot be reused
+  if (productIds.length > 0) {
+    await supabase.from("offers")
+      .update({ status: 'completed' })
+      .eq("buyer_id", user.id)
+      .eq("status", "accepted")
+      .in("product_id", productIds);
   }
 
   // Add impact points to user profile
@@ -158,12 +188,11 @@ export async function renderCheckout() {
     if (elShip) elShip.textContent = shipping === 0 ? "Free" : "$" + shipping;
     if (elTot) elTot.textContent = "$" + total.toLocaleString();
 
-    // --- PAYMENT MOCKUP LOGIC ---
+    // QRIS Real-Time Sync Logic
     const payOptions = document.querySelectorAll('.pay-option');
-    const qrisModal = document.getElementById('qris-simulator-modal');
     let paymentVerified = false;
     let selectedMethod = 'cc';
-
+    
     // Reset button state
     if (submitBtn) {
       submitBtn.textContent = "Place Order Securely";
@@ -171,6 +200,47 @@ export async function renderCheckout() {
       submitBtn.style.background = "#3d5a30";
       paymentVerified = false;
     }
+
+    let qrisChannel = null;
+    let currentPaymentId = null;
+
+    const setupQrisSync = async () => {
+      if (qrisChannel) {
+        supabase.removeChannel(qrisChannel);
+      }
+      
+      currentPaymentId = crypto.randomUUID();
+      const baseUrl = window.location.origin + window.location.pathname;
+      const payUrl = `${baseUrl}?simulate_pay=${currentPaymentId}&amount=${total}`;
+      
+      const qrisImg = document.getElementById('qris-img');
+      if (qrisImg) {
+        qrisImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(payUrl)}`;
+      }
+
+      qrisChannel = supabase.channel(`payment-${currentPaymentId}`);
+      
+      qrisChannel.on('broadcast', { event: 'payment_success' }, (payload) => {
+        paymentVerified = true;
+        
+        const waitText = document.getElementById('qris-wait-text');
+        if (waitText) {
+          waitText.innerHTML = '<span style="color:#166534; font-weight:700;">Payment Received from Mobile</span>';
+        }
+
+        if (submitBtn) {
+          submitBtn.textContent = "Payment Verified - Complete Order";
+          submitBtn.disabled = false;
+          submitBtn.style.background = "#3d5a30";
+        }
+        showToast("QRIS Payment Sync Successful!");
+        
+        // Auto submit checkout after 1 second for seamless experience
+        setTimeout(() => {
+          if (!submitBtn.disabled) submitBtn.click();
+        }, 1000);
+      }).subscribe();
+    };
 
     payOptions.forEach(opt => {
       const radio = opt.querySelector('input[type="radio"]');
@@ -185,6 +255,10 @@ export async function renderCheckout() {
           const detailsEl = document.getElementById(detailsId);
           if (detailsEl) detailsEl.style.display = 'block';
           selectedMethod = radio.value;
+
+          if (selectedMethod === 'qris') {
+             setupQrisSync();
+          }
 
           if (selectedMethod === 'qris' || selectedMethod === 'va') {
             paymentVerified = false;
@@ -205,12 +279,6 @@ export async function renderCheckout() {
       });
     });
 
-    // QRIS Simulator Logic
-    const btnScan = document.getElementById('btn-scan-qris');
-    const btnCancel = document.getElementById('btn-sim-cancel');
-    const btnPay = document.getElementById('btn-sim-pay');
-    const simAmount = document.getElementById('sim-amount');
-
     // VA Simulator Logic
     const vaDetails = document.getElementById('pay-details-va');
     if (vaDetails) {
@@ -227,7 +295,7 @@ export async function renderCheckout() {
           setTimeout(() => {
             paymentVerified = true;
             if (submitBtn) {
-              submitBtn.textContent = "Payment Verified ✅ - Complete Order";
+              submitBtn.textContent = "Payment Verified - Complete Order";
               submitBtn.disabled = false;
               submitBtn.style.background = "#3d5a30";
             }
@@ -235,37 +303,11 @@ export async function renderCheckout() {
             
             const waitingText = vaDetails.querySelector('p:last-child');
             if (waitingText) {
-              waitingText.innerHTML = '<span style="color:#166534; font-weight:700;">✅ Payment Received</span>';
+              waitingText.innerHTML = '<span style="color:#166534; font-weight:700;">Payment Received</span>';
             }
           }, 2000);
         });
       }
-    }
-
-    if (btnScan) {
-      btnScan.addEventListener('click', () => {
-        if (simAmount) simAmount.textContent = "$" + total.toLocaleString();
-        if (qrisModal) qrisModal.style.display = 'flex';
-      });
-    }
-
-    if (btnCancel) {
-      btnCancel.addEventListener('click', () => {
-        if (qrisModal) qrisModal.style.display = 'none';
-      });
-    }
-
-    if (btnPay) {
-      btnPay.addEventListener('click', () => {
-        if (qrisModal) qrisModal.style.display = 'none';
-        paymentVerified = true;
-        if (submitBtn) {
-          submitBtn.textContent = "Payment Verified ✅ - Complete Order";
-          submitBtn.disabled = false;
-          submitBtn.style.background = "#3d5a30";
-        }
-        showToast("Mock Payment Verified!");
-      });
     }
 
     if (submitBtn && submitBtn.dataset.checkoutBound !== "true") {

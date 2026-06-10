@@ -121,11 +121,11 @@ export async function renderProfile() {
         
         // Badge 1: ReHome Pioneer (Everyone gets this)
         badgesHtml += `
-          <div style="background:white; border:1px solid #e7e5e4; padding:8px 12px; border-radius:12px; display:flex; align-items:center; gap:8px;">
-            <div style="width:24px; height:24px; background:#fef9c3; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#854d0e;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg></div>
-            <div>
-              <div style="font-size:12px; font-weight:700; color:#1c1917; line-height:1;">Pioneer</div>
-              <div style="font-size:10px; color:#78716c; margin-top:2px;">Early Adopter</div>
+          <div style="flex:1; min-width:100px; background:white; border:1px solid #e7e5e4; padding:8px 12px; border-radius:12px; display:flex; align-items:center; gap:8px;">
+            <div style="width:24px; height:24px; background:#fef9c3; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#854d0e; flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg></div>
+            <div style="min-width:0;">
+              <div style="font-size:12px; font-weight:700; color:#1c1917; line-height:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Pioneer</div>
+              <div style="font-size:10px; color:#78716c; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Early Adopter</div>
             </div>
           </div>
         `;
@@ -133,21 +133,21 @@ export async function renderProfile() {
         // Badge 2: Carbon Saver (If score > 100)
         if (score > 100) {
           badgesHtml += `
-            <div style="background:white; border:1px solid #e7e5e4; padding:8px 12px; border-radius:12px; display:flex; align-items:center; gap:8px;">
-              <div style="width:24px; height:24px; background:#dcfce7; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#166534;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>
-              <div>
-                <div style="font-size:12px; font-weight:700; color:#1c1917; line-height:1;">Carbon Saver</div>
-                <div style="font-size:10px; color:#78716c; margin-top:2px;">100+ Impact</div>
+            <div style="flex:1; min-width:100px; background:white; border:1px solid #e7e5e4; padding:8px 12px; border-radius:12px; display:flex; align-items:center; gap:8px;">
+              <div style="width:24px; height:24px; background:#dcfce7; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#166534; flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>
+              <div style="min-width:0;">
+                <div style="font-size:12px; font-weight:700; color:#1c1917; line-height:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Carbon Saver</div>
+                <div style="font-size:10px; color:#78716c; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">100+ Impact</div>
               </div>
             </div>
           `;
         } else {
           badgesHtml += `
-            <div style="background:#f5f5f4; border:1px dashed #d6d3d1; padding:8px 12px; border-radius:12px; display:flex; align-items:center; gap:8px; opacity:0.6;">
-              <div style="width:24px; height:24px; background:#e7e5e4; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#a8a29e;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></div>
-              <div>
-                <div style="font-size:12px; font-weight:700; color:#a8a29e; line-height:1;">Carbon Saver</div>
-                <div style="font-size:10px; color:#a8a29e; margin-top:2px;">Unlock at 100 pt</div>
+            <div style="flex:1; min-width:100px; background:#f5f5f4; border:1px dashed #d6d3d1; padding:8px 12px; border-radius:12px; display:flex; align-items:center; gap:8px; opacity:0.6;">
+              <div style="width:24px; height:24px; background:#e7e5e4; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#a8a29e; flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></div>
+              <div style="min-width:0;">
+                <div style="font-size:12px; font-weight:700; color:#a8a29e; line-height:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Carbon Saver</div>
+                <div style="font-size:10px; color:#a8a29e; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Unlock at 100 pt</div>
               </div>
             </div>
           `;
@@ -156,11 +156,11 @@ export async function renderProfile() {
         // Badge 3: Forest Maker (If score > 1000)
         if (score > 1000) {
           badgesHtml += `
-            <div style="background:white; border:1px solid #e7e5e4; padding:8px 12px; border-radius:12px; display:flex; align-items:center; gap:8px;">
-              <div style="width:24px; height:24px; background:#e0f2fe; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#0369a1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M16 12l-4-4-4 4"></path><path d="M12 16V8"></path></svg></div>
-              <div>
-                <div style="font-size:12px; font-weight:700; color:#1c1917; line-height:1;">Forest Maker</div>
-                <div style="font-size:10px; color:#78716c; margin-top:2px;">1000+ Impact</div>
+            <div style="flex:1; min-width:100px; background:white; border:1px solid #e7e5e4; padding:8px 12px; border-radius:12px; display:flex; align-items:center; gap:8px;">
+              <div style="width:24px; height:24px; background:#e0f2fe; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#0369a1; flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M16 12l-4-4-4 4"></path><path d="M12 16V8"></path></svg></div>
+              <div style="min-width:0;">
+                <div style="font-size:12px; font-weight:700; color:#1c1917; line-height:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Forest Maker</div>
+                <div style="font-size:10px; color:#78716c; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">1000+ Impact</div>
               </div>
             </div>
           `;
@@ -608,7 +608,7 @@ export async function renderProfile() {
         });
       });
     };
-    setupCardNav('.purchase-item-card');
+    // setupCardNav('.purchase-item-card'); // Disabled so clicking only opens tracking modal
     setupCardNav('.selling-item-card');
     setupCardNav('.saved-item-card');
 

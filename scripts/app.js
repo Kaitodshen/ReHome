@@ -84,6 +84,60 @@ async function boot() {
         document.getElementById("login").hidden = false;
         return;
     }
+    
+    // Intercept QRIS Sync Request
+    const urlParams = new URLSearchParams(window.location.search);
+    const simPayId = urlParams.get('simulate_pay');
+    if (simPayId) {
+       if (loader) loader.hidden = true;
+       document.getElementById("app").hidden = true;
+       document.getElementById("login").hidden = true;
+       
+       const amount = urlParams.get('amount') || '0';
+       
+       document.body.innerHTML = `
+        <div style="min-height:100vh; background:#f0f9ff; display:flex; align-items:center; justify-content:center; padding:24px; font-family:var(--sans, sans-serif);">
+          <div style="background:white; width:100%; max-width:400px; border-radius:32px; overflow:hidden; box-shadow:0 20px 40px rgba(0,0,0,0.1);">
+            <div style="background:#0284c7; color:white; padding:32px 24px; text-align:center;">
+              <h3 style="margin:0; font-size:18px; font-weight:700;">Mobile Banking</h3>
+              <p style="margin:8px 0 0; font-size:14px; opacity:0.9;">Payment Confirmation</p>
+            </div>
+            <div style="padding:32px 24px; background:white; border-radius:24px 24px 0 0; margin-top:-16px; text-align:center;">
+              <p style="font-size:14px; color:#64748b; margin:0 0 8px;">Paying to</p>
+              <h2 style="font-size:22px; color:#0f172a; margin:0 0 32px;">ReHome Marketplace</h2>
+              
+              <div style="background:#f8fafc; border:1px dashed #cbd5e1; padding:24px; border-radius:16px; margin-bottom:32px;">
+                <p style="font-size:13px; color:#64748b; margin:0 0 8px;">Total Amount</p>
+                <h1 style="font-size:36px; color:#0f172a; margin:0; font-weight:800;">$${parseFloat(amount).toLocaleString()}</h1>
+              </div>
+              
+              <button id="btn-confirm-mobile" style="width:100%; padding:18px; border:none; background:#0ea5e9; border-radius:16px; font-size:16px; font-weight:700; color:white; cursor:pointer; box-shadow:0 10px 20px rgba(14, 165, 233, 0.2);">Confirm Payment</button>
+              <p id="mobile-status" style="margin-top:16px; font-size:14px; color:#166534; font-weight:600; display:none;">Sent! You can close this.</p>
+            </div>
+          </div>
+        </div>
+       `;
+       
+       document.getElementById('btn-confirm-mobile').addEventListener('click', async (e) => {
+          e.target.disabled = true;
+          e.target.textContent = 'Processing...';
+          e.target.style.background = '#94a3b8';
+          
+          const channel = supabase.channel(`payment-${simPayId}`);
+          channel.subscribe((status) => {
+            if (status === 'SUBSCRIBED') {
+              channel.send({
+                type: 'broadcast',
+                event: 'payment_success',
+                payload: { status: 'success' }
+              });
+              e.target.style.display = 'none';
+              document.getElementById('mobile-status').style.display = 'block';
+            }
+          });
+       });
+       return;
+    }
 
     if (window.location.hash.includes('access_token')) {
         await supabase.auth.getSession();
