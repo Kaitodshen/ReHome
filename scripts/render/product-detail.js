@@ -18,9 +18,25 @@ export async function renderProductDetail() {
     const supabase = await getSupabaseClient();
     const { data: { user } } = await supabase.auth.getUser();
     
+    let isVaultOwner = false;
+    let vaultedOrderItemId = null;
+
     if (user) {
        const { data: favs } = await supabase.from('favorites').select('product_id').eq('user_id', user.id);
        if (favs) favoriteIds = favs.map(f => f.product_id);
+
+       const { data: orderItemData } = await supabase
+          .from('order_items')
+          .select('id, delivery_status, orders!inner(user_id)')
+          .eq('product_id', productId)
+          .eq('orders.user_id', user.id)
+          .eq('delivery_status', 'vaulted')
+          .maybeSingle();
+       
+       if (orderItemData) {
+          isVaultOwner = true;
+          vaultedOrderItemId = orderItemData.id;
+       }
     } else {
        favoriteIds = JSON.parse(localStorage.getItem("rehome_favorites") || "[]");
     }
@@ -53,7 +69,14 @@ export async function renderProductDetail() {
     const isActiveClass = favoriteIds.includes(product.id) ? "active" : "";
 
     let cartButtonHtml = '';
-    if (product.status === 'sold' || stockTersedia <= 0) {
+    if (isVaultOwner) {
+       cartButtonHtml = `
+         <div style="display: flex; gap: 16px;">
+           <button class="btn-resell-vault" data-item-id="${vaultedOrderItemId}" style="flex: 1; padding: 16px; background-color: #f5f4f0; color: #1c1917; border: 1px solid #d6d3d1; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.2s;" onmouseover="this.style.background='#e7e5e4'" onmouseout="this.style.background='#f5f4f0'">Resell</button>
+           <button class="btn-deliver-vault" data-item-id="${vaultedOrderItemId}" style="flex: 1; padding: 16px; background-color: #3d5a30; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.2s;" onmouseover="this.style.background='#526442'" onmouseout="this.style.background='#3d5a30'">Deliver</button>
+         </div>
+       `;
+    } else if (product.status === 'sold' || stockTersedia <= 0) {
        cartButtonHtml = `<div style="width: 100%; padding: 16px; background-color: #f5f5f4; color: #78716c; border-radius: 12px; font-size: 16px; font-weight: 600; text-align: center;">Out of Stock</div>`;
     } else if (user && user.id === product.seller_id) {
        cartButtonHtml = `<div style="width: 100%; padding: 16px; background-color: #f5f5f4; color: #78716c; border-radius: 12px; font-size: 16px; font-weight: 600; text-align: center;">You own this item</div>`;
@@ -124,7 +147,7 @@ export async function renderProductDetail() {
 
             ${cartButtonHtml}
             
-            ${(product.status !== 'sold' && stockTersedia > 0 && (!user || user.id !== product.seller_id)) ? `<button class="btn-outline" id="make-offer-btn">Make an Offer</button>` : ''}
+            ${(!isVaultOwner && product.status !== 'sold' && stockTersedia > 0 && (!user || user.id !== product.seller_id)) ? `<button class="btn-outline" id="make-offer-btn">Make an Offer</button>` : ''}
 
             <!-- Offer Modal -->
             <div id="offer-modal" style="display:none; position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,0.5); backdrop-filter:blur(4px); align-items:center; justify-content:center;">
@@ -377,6 +400,48 @@ export async function renderProductDetail() {
           offerSubmit.disabled = false;
           offerSubmit.textContent = 'Submit Offer';
         }
+      });
+    }
+
+    const btnDeliver = document.querySelector('.btn-deliver-vault');
+    if (btnDeliver) {
+      btnDeliver.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        btnDeliver.disabled = true;
+        btnDeliver.textContent = 'Processing...';
+        const itemId = btnDeliver.dataset.itemId;
+        try {
+          const { error } = await supabase.from('order_items').update({ delivery_status: 'delivered' }).eq('id', itemId);
+          if (error) throw error;
+          showToast("Delivery requested! The item is on its way.");
+          navigate('profile'); // Send to profile to view delivery
+        } catch (err) {
+          showToast("Failed to request delivery.");
+          btnDeliver.disabled = false;
+          btnDeliver.textContent = 'Deliver';
+        }
+      });
+    }
+
+    const btnResell = document.querySelector('.btn-resell-vault');
+    if (btnResell) {
+      btnResell.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const itemId = btnResell.dataset.itemId;
+        const productData = {
+           title: safeTitle,
+           price: safePrice,
+           image_url: mainImageUrl,
+           description: safeDescription,
+           category: safeCategory,
+           condition: safeCondition,
+           maker: safeMaker,
+           quantity: 1
+        };
+        
+        localStorage.setItem('rehome_resell_data', JSON.stringify({ ...productData, order_item_id: itemId }));
+        showToast("Setting up your resell listing...");
+        navigate("new-listing");
       });
     }
 

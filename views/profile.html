@@ -75,15 +75,14 @@
     </div>
 
     <div>
-      <div style="display: flex; gap: 0; border-bottom: 1px solid #e7e5e4; margin-bottom: 32px; overflow-x: auto;">
-        <button class="profile-tab active" data-tab="purchase" style="padding: 0 4px 14px; margin-right: 28px; font-weight: 700; font-size: 15px; color: #1c1917; border: none; background: transparent; border-bottom: 2px solid #3d5a30; cursor: pointer; white-space: nowrap;">Purchase History</button>
-        <button class="profile-tab" data-tab="selling" style="padding: 0 4px 14px; margin-right: 28px; font-weight: 600; font-size: 15px; color: #78716c; border: none; background: transparent; border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap;">Selling History</button>
-        <button class="profile-tab" data-tab="drafts" style="padding: 0 4px 14px; margin-right: 28px; font-weight: 600; font-size: 15px; color: #78716c; border: none; background: transparent; border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap;">Drafts</button>
-        <button class="profile-tab" data-tab="offers" style="padding: 0 4px 14px; margin-right: 28px; font-weight: 600; font-size: 15px; color: #78716c; border: none; background: transparent; border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap;">My Offers</button>
-        <button class="profile-tab" data-tab="saved" style="padding: 0 4px 14px; margin-right: 28px; font-weight: 600; font-size: 15px; color: #78716c; border: none; background: transparent; border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap;">
+      <div style="display: flex; gap: 12px; margin-bottom: 32px; overflow-x: auto; padding-bottom: 8px;">
+        <button class="profile-tab active" data-tab="purchase" style="padding: 8px 20px; font-weight: 600; font-size: 14px; color: white; border: none; background: #3d5a30; border-radius: 99px; cursor: pointer; white-space: nowrap; transition: 0.2s;">Purchase History</button>
+        <button class="profile-tab" data-tab="selling" style="padding: 8px 20px; font-weight: 600; font-size: 14px; color: #78716c; border: none; background: #f5f4f0; border-radius: 99px; cursor: pointer; white-space: nowrap; transition: 0.2s;" onmouseover="this.style.background='#e7e5e4'" onmouseout="if(!this.classList.contains('active')) this.style.background='#f5f4f0'">Selling History</button>
+        <button class="profile-tab" data-tab="drafts" style="padding: 8px 20px; font-weight: 600; font-size: 14px; color: #78716c; border: none; background: #f5f4f0; border-radius: 99px; cursor: pointer; white-space: nowrap; transition: 0.2s;" onmouseover="this.style.background='#e7e5e4'" onmouseout="if(!this.classList.contains('active')) this.style.background='#f5f4f0'">Drafts</button>
+        <button class="profile-tab" data-tab="offers" style="padding: 8px 20px; font-weight: 600; font-size: 14px; color: #78716c; border: none; background: #f5f4f0; border-radius: 99px; cursor: pointer; white-space: nowrap; transition: 0.2s;" onmouseover="this.style.background='#e7e5e4'" onmouseout="if(!this.classList.contains('active')) this.style.background='#f5f4f0'">My Offers</button>
+        <button class="profile-tab" data-tab="saved" style="padding: 8px 20px; font-weight: 600; font-size: 14px; color: #78716c; border: none; background: #f5f4f0; border-radius: 99px; cursor: pointer; white-space: nowrap; transition: 0.2s; display: flex; align-items: center; gap: 8px;" onmouseover="this.style.background='#e7e5e4'" onmouseout="if(!this.classList.contains('active')) this.style.background='#f5f4f0'">
           Saved Items
-          <span style="display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 5px; background: #e7e5e4; border-radius: 99px; font-size: 11px; font-weight: 700; color: #57534e; margin-left: 6px;">12</span>
-          <span id="profile-saved-count" style="display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 5px; background: #e7e5e4; border-radius: 99px; font-size: 11px; font-weight: 700; color: #57534e; margin-left: 6px;">0</span>
+          <span id="profile-saved-count" style="display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 5px; background: rgba(0,0,0,0.1); border-radius: 99px; font-size: 11px; font-weight: 700; color: inherit;">0</span>
         </button>
       </div>
 

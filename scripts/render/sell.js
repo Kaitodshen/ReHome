@@ -89,7 +89,7 @@ export async function renderSell() {
        <div style="display: grid; grid-template-columns: 1.8fr 1fr; gap: 24px; margin-bottom: 24px;">
           
           <!-- Sales Performance -->
-          <div class="glass-panel" style="padding: 32px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div style="background: white; border-radius: 16px; padding: 32px; border: 1px solid #e7e5e4; display: flex; flex-direction: column; justify-content: space-between;">
              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px;">
                 <div>
                    <h3 style="margin: 0 0 8px 0; font-size: 22px; font-weight: 600;">Sales Performance</h3>
@@ -125,8 +125,8 @@ export async function renderSell() {
           </div>
 
           <!-- Sustainable Impact -->
-          <div class="glass-panel" style="padding: 32px; display: flex; flex-direction: column;">
-             <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(255, 255, 255, 0.5); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; color: #526442;">
+          <div style="background: #fdf8f3; border-radius: 16px; padding: 32px; border: 1px solid #ede8df; display: flex; flex-direction: column;">
+             <div style="width: 48px; height: 48px; border-radius: 50%; background: #f0f4ea; display: flex; align-items: center; justify-content: center; margin-bottom: 24px; color: #526442;">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12c0-2.76 1.12-5.26 2.93-7.07"/><path d="M12 6v6l4 2"/></svg>
              </div>
              <h3 style="font-family: var(--serif); font-size: 26px; margin: 0 0 16px 0; color: #526442;">Sustainable Impact</h3>
@@ -144,22 +144,22 @@ export async function renderSell() {
 
        <!-- ═══ QUICK ACTIONS ═══ -->
        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 60px;">
-         <div id="btn-upload-item" class="glass-panel" style="padding: 24px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='none'">
-            <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 255, 255, 0.5); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; color: #526442;">
+         <div id="btn-upload-item" style="background: white; border: 1px solid #e7e5e4; border-radius: 16px; padding: 24px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='none'">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: #f0f4ea; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; color: #526442;">
                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
             </div>
             <h4 style="margin: 0 0 4px 0; font-size: 16px; font-weight: 700;">Upload Item</h4>
             <p style="margin: 0; font-size: 14px; color: #78716c;">List a new curated piece</p>
          </div>
-         <div id="btn-sales-history" class="glass-panel" style="padding: 24px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='none'">
-            <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 255, 255, 0.5); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; color: #c2410c;">
+         <div id="btn-sales-history" style="background: white; border: 1px solid #e7e5e4; border-radius: 16px; padding: 24px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='none'">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: #fff7ed; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; color: #c2410c;">
                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
             </div>
             <h4 style="margin: 0 0 4px 0; font-size: 16px; font-weight: 700;">Sales History</h4>
             <p style="margin: 0; font-size: 14px; color: #78716c;">View all past transactions</p>
          </div>
-         <div id="btn-seller-support" class="glass-panel" style="padding: 24px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='none'">
-            <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 255, 255, 0.5); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; color: #57534e;">
+         <div id="btn-seller-support" style="background: white; border: 1px solid #e7e5e4; border-radius: 16px; padding: 24px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='none'">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: #f5f5f4; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; color: #57534e;">
                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
             </div>
             <h4 style="margin: 0 0 4px 0; font-size: 16px; font-weight: 700;">Seller Support</h4>

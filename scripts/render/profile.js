@@ -237,8 +237,17 @@ export async function renderProfile() {
                 `;
               }
               
+              const hoverTrackingHtml = `
+                <div class="hover-tracking" style="position:absolute; inset:0; background:rgba(251,249,248,0.95); backdrop-filter:blur(4px); display:flex; flex-direction:column; justify-content:center; align-items:center; opacity:0; transition:opacity 0.2s; padding:16px; text-align:center; z-index:10;">
+                  <div style="font-size:11px; font-weight:800; color:#3d5a30; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">Tracking Progress</div>
+                  <div style="font-size:15px; font-weight:700; color:#1c1917; margin-bottom:8px; text-transform:capitalize;">Status: ${sanitize(statusDisplay)}</div>
+                  <div style="font-size:12px; color:#78716c;">Click to view item details</div>
+                </div>
+              `;
+
               return `
-                <div class="purchase-item-card glass-panel" data-product-id="${item.product_id}" data-order-id="${order.id}" data-status="${sanitize(statusDisplay)}" style="overflow:hidden;cursor:pointer;transition:0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+                <div class="purchase-item-card glass-panel" data-product-id="${item.product_id}" data-order-id="${order.id}" data-status="${sanitize(statusDisplay)}" style="overflow:hidden;cursor:pointer;transition:0.2s;position:relative;" onmouseover="this.style.transform='translateY(-2px)'; this.querySelector('.hover-tracking').style.opacity='1'" onmouseout="this.style.transform='none'; this.querySelector('.hover-tracking').style.opacity='0'">
+                  ${hoverTrackingHtml}
                   <div style="position:relative;">
                     <img src="${sanitize(imgUrl)}"
                          style="width:100%;aspect-ratio:4/3;object-fit:cover;"
@@ -514,86 +523,17 @@ export async function renderProfile() {
       });
     });
 
-      // Bind purchase item click -> open tracking modal
+      // Bind purchase item click -> navigate to product detail
       document.querySelectorAll('.purchase-item-card').forEach(card => {
         card.addEventListener('click', (e) => {
           if (e.target.closest('button')) return; // Ignore if clicked on a button
           
-          const modal = document.getElementById('order-tracking-modal');
-          if (!modal) return;
-          
-          // Get data from the card's DOM
-          const title = card.querySelector('.purchase-title')?.textContent || 'Product Name';
-          const price = card.querySelector('.purchase-price')?.textContent || '$0.00';
-          const imgUrl = card.querySelector('img')?.getAttribute('src') || '';
-          const status = card.dataset.status || 'delivered';
-          const orderId = card.dataset.orderId || '123456';
-          
-          // Populate Modal
-          document.getElementById('track-order-id').textContent = `Order #${orderId.substring(0,8).toUpperCase()}`;
-          document.getElementById('track-title').textContent = title;
-          document.getElementById('track-price').textContent = price;
-          document.getElementById('track-img').src = imgUrl;
-          
-          // Reset UI
-          const activeDot = 'border-radius:50%; background:#3d5a30; border:4px solid white; box-shadow:0 0 0 1px #3d5a30; flex-shrink:0; width:14px; height:14px;';
-          const inactiveDot = 'border-radius:50%; background:#e7e5e4; border:4px solid white; box-shadow:0 0 0 1px #e7e5e4; flex-shrink:0; width:14px; height:14px;';
-          
-          const tDot = document.getElementById('track-step-transit-dot');
-          const tTitle = document.getElementById('track-step-transit-title');
-          const tDesc = document.getElementById('track-step-transit-desc');
-          
-          const aDot = document.getElementById('track-step-arrived-dot');
-          const aTitle = document.getElementById('track-step-arrived-title');
-          const aDesc = document.getElementById('track-step-arrived-desc');
-          
-          // Determine state
-          if (status === 'shipped' || status === 'delivered') {
-             tDot.style = activeDot;
-             tTitle.style.color = '#1c1917';
-             tDesc.style.color = '#78716c';
-          } else {
-             tDot.style = inactiveDot;
-             tTitle.style.color = '#a8a29e';
-             tDesc.style.color = '#a8a29e';
+          const productId = card.dataset.productId;
+          if (productId) {
+            navigate('item', { productId });
           }
-          
-          if (status === 'delivered') {
-             aDot.style = activeDot;
-             aTitle.style.color = '#1c1917';
-             aDesc.style.color = '#78716c';
-          } else {
-             aDot.style = inactiveDot;
-             aTitle.style.color = '#a8a29e';
-             aDesc.style.color = '#a8a29e';
-          }
-          
-          // Special case for Vaulted
-          if (status === 'vaulted') {
-            tTitle.textContent = 'Secured in Vault';
-            tDesc.textContent = 'Item is safe in our climate-controlled facility.';
-            tDot.style = activeDot;
-            tTitle.style.color = '#1c1917';
-            tDesc.style.color = '#78716c';
-            aTitle.textContent = 'Awaiting Delivery Request';
-            aDesc.textContent = 'You can request delivery or resell it anytime.';
-          } else {
-            tTitle.textContent = 'In Transit';
-            tDesc.textContent = 'Low-emission delivery in progress.';
-            aTitle.textContent = 'Delivered';
-            aDesc.textContent = 'Package has safely arrived.';
-          }
-          
-          modal.style.display = 'flex';
         });
       });
-      
-      const btnCloseTrack = document.getElementById('btn-close-tracking');
-      if (btnCloseTrack) {
-        btnCloseTrack.addEventListener('click', () => {
-          document.getElementById('order-tracking-modal').style.display = 'none';
-        });
-      }
 
     const setupCardNav = async (selector) => {
       document.querySelectorAll(selector).forEach(card => {
