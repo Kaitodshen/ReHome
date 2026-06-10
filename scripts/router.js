@@ -1,4 +1,4 @@
-import { showToast } from "./ui.js";
+import { showToast, setupScrollAnimations } from "./ui.js";
 
 let routeParams = JSON.parse(localStorage.getItem('rehome_route_params')) || {};
 
@@ -41,7 +41,14 @@ export async function navigate(route) {
       if (response.ok) viewCache[route] = await response.text();
       else viewCache[route] = `<div style="padding:100px;text-align:center;color:#78716c;font-family:sans-serif;"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#3d5a30" stroke-width="2" style="animation: spin 1s linear infinite;"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></svg><style>@keyframes spin{100%{transform:rotate(360deg)}}</style><h2 style="margin-top:16px;">Loading...</h2></div>`;
     }
+    
+    // Page fade-in transition
+    container.classList.remove("page-enter");
+    void container.offsetWidth; // trigger reflow
+    
     container.innerHTML = viewCache[route];
+    container.classList.add("page-enter");
+    
     window.scrollTo({ top: 0, behavior: "auto" });
 
     const STATIC_ROUTES = ['shipping', 'returns', 'terms', 'help-center', 'contact', 'seller-guide'];
@@ -56,6 +63,8 @@ export async function navigate(route) {
         }
       }
     }
+
+    setTimeout(setupScrollAnimations, 50);
 
   } catch (error) {
     showToast("Gagal memuat halaman.");

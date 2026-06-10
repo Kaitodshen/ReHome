@@ -394,10 +394,74 @@ nav, header, .app-header {
 }
 
 .prod-card {
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 .prod-card:hover {
-  transform: translateY(-6px) !important;
-  box-shadow: 0 12px 30px rgba(82, 100, 66, 0.15) !important;
+  transform: translateY(-8px) scale(1.01) !important;
+  box-shadow: 0 20px 40px rgba(82, 100, 66, 0.12) !important;
+}
+
+/* WOW Features: Animations & Transitions */
+.fade-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.fade-up.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Page Transitions */
+.page-enter {
+  animation: pageFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Magnetic Buttons */
+.magnetic-btn {
+  display: inline-block;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.magnetic-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(61, 90, 48, 0.2);
+}
+
+/* Subtle Shine on Cards */
+.glass-panel, .prod-card {
+  position: relative;
+  overflow: hidden;
+}
+.glass-panel::after, .prod-card::after {
+  content: "";
+  position: absolute;
+  top: 0; left: -100%;
+  width: 50%; height: 100%;
+  background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+  transform: skewX(-25deg);
+  transition: 0s;
+  z-index: 1;
+  pointer-events: none;
+}
+.glass-panel:hover::after, .prod-card:hover::after {
+  animation: shine 1.2s ease-in-out;
+}
+@keyframes shine {
+  100% { left: 200%; }
+}
+
+/* Luxurious Typography */
+h1, h2, h3 {
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+p {
+  line-height: 1.6;
+  letter-spacing: 0.01em;
 }

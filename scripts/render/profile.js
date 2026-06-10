@@ -107,13 +107,44 @@ export async function renderProfile() {
     const impactEl = document.getElementById("profile-impact-score");
     if (impactEl) {
       const score = profile.impact_score || 0;
-      impactEl.textContent = score.toLocaleString();
+      const trees = Math.floor(score / 175);
       
-      const treesEl = document.getElementById("profile-impact-trees");
-      if (treesEl) {
-        const trees = Math.floor(score / 175);
-        treesEl.textContent = `Equivalent to planting ${trees} trees through circular shopping.`;
+      // Animate Donut Chart
+      const donutPath = document.getElementById("impact-donut-path");
+      if (donutPath) {
+        setTimeout(() => {
+          const percentage = Math.min(100, Math.max(0, (score / 2000) * 100)); // Max out at 2000
+          donutPath.style.strokeDasharray = `${percentage}, 100`;
+        }, 100);
       }
+
+      // CountUp Animation
+      const duration = 2000;
+      const frameRate = 1000 / 60;
+      const totalFrames = Math.round(duration / frameRate);
+      let frame = 0;
+
+      const counter = setInterval(() => {
+        frame++;
+        const progress = 1 - Math.pow(1 - (frame / totalFrames), 3); // cubic ease-out
+        const currentScore = Math.floor(score * progress);
+        const currentTrees = Math.floor(trees * progress);
+        
+        impactEl.textContent = currentScore.toLocaleString();
+        
+        const impactSmall = document.getElementById("profile-impact-score-small");
+        if(impactSmall) impactSmall.textContent = currentScore.toLocaleString();
+
+        const treesCountEl = document.getElementById("profile-tree-count");
+        if (treesCountEl) treesCountEl.textContent = currentTrees.toLocaleString();
+
+        if (frame >= totalFrames) {
+          clearInterval(counter);
+          impactEl.textContent = score.toLocaleString();
+          if(document.getElementById("profile-impact-score-small")) document.getElementById("profile-impact-score-small").textContent = score.toLocaleString();
+          if(document.getElementById("profile-tree-count")) document.getElementById("profile-tree-count").textContent = trees.toLocaleString();
+        }
+      }, frameRate);
       
       const badgesEl = document.getElementById("profile-badges");
       if (badgesEl) {
