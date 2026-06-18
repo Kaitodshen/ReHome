@@ -152,7 +152,7 @@ export async function renderSalesHistory() {
     const elCount = document.getElementById("sh-transaction-count");
     const elEmpty = document.getElementById("sh-empty-state");
 
-    if (elTotalSales) elTotalSales.textContent = `$${totalSales.toLocaleString()}`;
+    if (elTotalSales) elTotalSales.textContent = `${window.formatCurrency(totalSales)}`;
     if (elItemsSold) elItemsSold.textContent = products.length;
     if (elCO2) elCO2.textContent = `${totalCO2.toFixed(1)}kg`;
     if (elCount) elCount.textContent = `${products.length} transactions`;
@@ -253,7 +253,7 @@ function renderCard(product, salePrice, saleDate, orderStatus) {
           color:#3d5a30;
           font-weight:700;
           letter-spacing:-0.01em;
-        ">$${price}</strong>
+        ">${window.formatCurrency(price)}</strong>
       </div>
     </article>`;
 }

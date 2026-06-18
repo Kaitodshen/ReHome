@@ -105,7 +105,7 @@ export async function renderSell() {
                   const isMax = val === maxWeekly && val > 0;
                   return `<div style="flex:1; position: relative; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
                     ${isMax ? `<div style="position: absolute; top: ${100 - pct - 12}%; left: 50%; transform: translateX(-50%); background: #1c1917; color: white; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; white-space: nowrap; z-index: 2;">
-                       $${val.toLocaleString()}
+                       ${window.formatCurrency(val)}
                        <div style="position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%) rotate(45deg); width: 8px; height: 8px; background: #1c1917;"></div>
                     </div>` : ''}
                     <div style="width: 100%; height: ${pct}%; background: ${isMax ? '#9caf88' : '#e2e6db'}; border-radius: 6px 6px 0 0; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#9caf88'" onmouseout="this.style.background='${isMax ? '#9caf88' : '#e2e6db'}'"></div>
@@ -118,7 +118,7 @@ export async function renderSell() {
 
              <!-- Summary row -->
              <div style="display: flex; gap: 32px; margin-top: 24px; padding-top: 20px; border-top: 1px solid #f0ede8;">
-               <div><div style="font-size: 24px; font-weight: 700; color: #3d5a30;">$${totalSalesAmount.toLocaleString()}</div><div style="font-size: 12px; color: #78716c;">Total Revenue</div></div>
+               <div><div style="font-size: 24px; font-weight: 700; color: #3d5a30;">${window.formatCurrency(totalSalesAmount)}</div><div style="font-size: 12px; color: #78716c;">Total Revenue</div></div>
                <div><div style="font-size: 24px; font-weight: 700; color: #1c1917;">${totalItemsSold}</div><div style="font-size: 12px; color: #78716c;">Items Sold</div></div>
                <div><div style="font-size: 24px; font-weight: 700; color: #1c1917;">${allProducts.length}</div><div style="font-size: 12px; color: #78716c;">Total Listings</div></div>
              </div>
@@ -246,7 +246,7 @@ export async function renderSell() {
                 <strong style="font-size:15px; color:#1c1917;">${sanitize(buyerName)}</strong>
                 <span style="background:${st.bg}; color:${st.color}; padding:2px 8px; border-radius:99px; font-size:10px; font-weight:800; text-transform:uppercase;">${st.label}</span>
               </div>
-              <div style="font-size:13px; color:#78716c; margin-bottom:4px;">offered <strong style="color:#3d5a30;">$${offerPrice.toLocaleString()}</strong> for <strong>${sanitize(productTitle)}</strong> <span style="color:#c2410c; font-size:12px;">(-${discount}%)</span></div>
+              <div style="font-size:13px; color:#78716c; margin-bottom:4px;">offered <strong style="color:#3d5a30;">${window.formatCurrency(offerPrice)}</strong> for <strong>${sanitize(productTitle)}</strong> <span style="color:#c2410c; font-size:12px;">(-${discount}%)</span></div>
               ${offer.message ? `<div style="font-size:13px; color:#78716c; font-style:italic; margin-top:4px;">"${sanitize(offer.message)}"</div>` : ''}
             </div>
             <div style="display:flex; gap:8px; flex-shrink:0;">
@@ -322,20 +322,20 @@ export async function renderSell() {
         <article style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.04); border: 1px solid rgba(197,200,188,0.4); display: flex; flex-direction: column; cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 12px 24px rgba(61,90,48,0.08)'" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.04)'">
            <div style="position: relative; height: 260px; background: #f5f4f0; overflow: hidden; padding: 0;">
               ${hasImg ? `<img src="${sanitize(imgSrc)}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'" onerror="this.style.display='none'">` : `<div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #a8a29e; font-size: 14px; font-weight: 600;">No Image</div>`}
-              <div style="position: absolute; top: 16px; left: 16px; background: ${sc.bg}; color: ${sc.color}; padding: 6px 14px; border-radius: 999px; font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">${sc.label}</div>
-              ${soldQty > 0 ? `<div style="position: absolute; top: 16px; right: 16px; background: #dcfce7; color: #166534; padding: 6px 14px; border-radius: 99px; font-size: 10px; font-weight: 800; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">${soldQty} sold</div>` : ''}
-           </div>
-           <div style="display: flex; flex-direction: column; justify-content: space-between; padding: 20px; flex: 1;">
-              <div>
-                 <span style="font-size: 11px; font-weight: 800; color: #78716c; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 6px;">${sanitize(p.category)} &bull; ${sanitize(p.condition)}</span>
-                 <h3 style="font-size: 17px; margin: 0 0 12px 0; color: #1c1917; font-family: var(--sans, sans-serif); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${sanitize(p.title)}</h3>
+            <article class="prod-card glass-panel" data-id="${p.id}" style="position: relative; display: flex; flex-direction: column; cursor: pointer; border-radius: 20px; border: 1px solid rgba(197, 200, 188, 0.4); padding-bottom: 16px; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px);">
+              <div style="height: 280px; margin-bottom: 16px; position: relative;">
+                <img src="${sanitize(imgSrc)}" alt="${sanitize(p.title)}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px 20px 0 0;">
+                <div style="position: absolute; top: 16px; left: 16px; padding: 6px 14px; border-radius: 99px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; ${statusStyle.bg}; color: ${statusStyle.color}; box-shadow: 0 4px 12px rgba(0,0,0,0.1); backdrop-filter: blur(8px);">${statusStyle.label}</div>
               </div>
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 16px; border-top: 1px solid rgba(197,200,188,0.3);">
-                 <strong style="font-size: 18px; color: #3d5a30; font-weight: 600;">$${Number(p.price).toFixed(0)}</strong>
-                 <button class="btn-edit-listing" data-id="${p.id}" style="background: none; border: none; font-size: 13px; font-weight: 700; color: #a8a29e; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#1c1917'" onmouseout="this.style.color='#a8a29e'">Edit Listing</button>
+              <div style="padding: 0 20px; display: flex; flex-direction: column; flex-grow: 1;">
+                <span style="font-size: 11px; font-weight: 800; color: #a8a29e; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px;">${sanitize(p.category)} &bull; ${sanitize(p.condition)}</span>
+                <h3 style="margin: 0 0 16px 0; font-size: 17px; font-weight: 700; color: #1c1917; flex-grow: 1; font-family: var(--sans); line-height: 1.4;">${sanitize(p.title)}</h3>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-top: auto; border-top: 1px solid rgba(197, 200, 188, 0.3); padding-top: 16px;">
+                  <div style="font-size: 20px; font-weight: 800; color: #3d5a30;">${window.formatCurrency(p.price)}</div>
+                  <button class="btn-edit-listing magnetic-btn" data-id="${p.id}" style="background: rgba(156, 175, 136, 0.15); border: none; color: #3d5a30; font-size: 12px; font-weight: 800; cursor: pointer; padding: 8px 16px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.5px; transition: 0.2s;" onmouseover="this.style.background='rgba(156, 175, 136, 0.25)'" onmouseout="this.style.background='rgba(156, 175, 136, 0.15)'">Edit</button>
+                </div>
               </div>
-           </div>
-        </article>`;
+            </article>`;
     }).join('');
 
     // New listing card
@@ -455,48 +455,48 @@ export async function renderSell() {
     overlay.id = 'edit-modal-overlay';
     overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;';
     overlay.innerHTML = `
-      <div style="background: white; border-radius: 20px; padding: 40px; max-width: 520px; width: 90%; box-shadow: 0 24px 48px rgba(0,0,0,0.15); max-height: 90vh; overflow-y: auto;">
-        <h2 style="font-family: var(--serif); font-size: 24px; color: #3d5a30; margin: 0 0 24px;">Edit Listing</h2>
-        <form id="edit-listing-form" style="display: flex; flex-direction: column; gap: 16px;">
+      <div class="glass-panel" style="background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(24px); border-radius: 24px; padding: 48px; max-width: 540px; width: 90%; box-shadow: 0 32px 64px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.6); max-height: 90vh; overflow-y: auto;">
+        <h2 style="font-family: var(--serif); font-size: 28px; font-weight: 500; color: #3d5a30; margin: 0 0 32px;">Edit Listing</h2>
+        <form id="edit-listing-form" style="display: flex; flex-direction: column; gap: 20px;">
           <div>
-            <label style="font-size: 12px; font-weight: 600; color: #78716c; display: block; margin-bottom: 6px;">Title</label>
-            <input name="title" value="${sanitize(product.title)}" style="width: 100%; padding: 12px 14px; border: 1px solid #dddbd6; border-radius: 10px; font-size: 14px; box-sizing: border-box; outline: none;" required>
+            <label style="font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #78716c; display: block; margin-bottom: 8px;">Title</label>
+            <input name="title" value="${sanitize(product.title)}" style="width: 100%; padding: 16px; border: 1px solid rgba(197, 200, 188, 0.5); border-radius: 12px; font-size: 15px; box-sizing: border-box; outline: none; background: rgba(255,255,255,0.5); transition: 0.3s;" onfocus="this.style.borderColor='#3d5a30';this.style.boxShadow='0 0 0 4px rgba(61, 90, 48, 0.1)'" onblur="this.style.borderColor='rgba(197, 200, 188, 0.5)';this.style.boxShadow='none'" required>
           </div>
           <div>
-            <label style="font-size: 12px; font-weight: 600; color: #78716c; display: block; margin-bottom: 6px;">Description</label>
-            <textarea name="description" rows="3" style="width: 100%; padding: 12px 14px; border: 1px solid #dddbd6; border-radius: 10px; font-size: 14px; box-sizing: border-box; outline: none; resize: vertical;">${sanitize(product.description || '')}</textarea>
+            <label style="font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #78716c; display: block; margin-bottom: 8px;">Description</label>
+            <textarea name="description" rows="3" style="width: 100%; padding: 16px; border: 1px solid rgba(197, 200, 188, 0.5); border-radius: 12px; font-size: 15px; box-sizing: border-box; outline: none; resize: vertical; background: rgba(255,255,255,0.5); transition: 0.3s;" onfocus="this.style.borderColor='#3d5a30';this.style.boxShadow='0 0 0 4px rgba(61, 90, 48, 0.1)'" onblur="this.style.borderColor='rgba(197, 200, 188, 0.5)';this.style.boxShadow='none'">${sanitize(product.description || '')}</textarea>
           </div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
             <div>
-              <label style="font-size: 12px; font-weight: 600; color: #78716c; display: block; margin-bottom: 6px;">Price ($)</label>
-              <input name="price" type="number" step="0.01" value="${product.price}" style="width: 100%; padding: 12px 14px; border: 1px solid #dddbd6; border-radius: 10px; font-size: 14px; box-sizing: border-box; outline: none;" required>
+              <label style="font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #78716c; display: block; margin-bottom: 8px;">Price ($)</label>
+              <input name="price" type="number" step="0.01" value="${product.price}" style="width: 100%; padding: 16px; border: 1px solid rgba(197, 200, 188, 0.5); border-radius: 12px; font-size: 15px; box-sizing: border-box; outline: none; background: rgba(255,255,255,0.5); transition: 0.3s;" onfocus="this.style.borderColor='#3d5a30';this.style.boxShadow='0 0 0 4px rgba(61, 90, 48, 0.1)'" onblur="this.style.borderColor='rgba(197, 200, 188, 0.5)';this.style.boxShadow='none'" required>
             </div>
             <div>
-              <label style="font-size: 12px; font-weight: 600; color: #78716c; display: block; margin-bottom: 6px;">Status</label>
-              <select name="status" style="width: 100%; padding: 12px 14px; border: 1px solid #dddbd6; border-radius: 10px; font-size: 14px; box-sizing: border-box; outline: none; background: white;">
+              <label style="font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #78716c; display: block; margin-bottom: 8px;">Status</label>
+              <select name="status" style="width: 100%; padding: 16px; border: 1px solid rgba(197, 200, 188, 0.5); border-radius: 12px; font-size: 15px; box-sizing: border-box; outline: none; background: rgba(255,255,255,0.5); transition: 0.3s;">
                 <option value="active" ${product.status === 'active' ? 'selected' : ''}>Active</option>
                 <option value="draft" ${product.status === 'draft' ? 'selected' : ''}>Draft</option>
                 <option value="sold" ${product.status === 'sold' ? 'selected' : ''}>Sold</option>
               </select>
             </div>
           </div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
             <div>
-              <label style="font-size: 12px; font-weight: 600; color: #78716c; display: block; margin-bottom: 6px;">Category</label>
-              <select name="category" style="width: 100%; padding: 12px 14px; border: 1px solid #dddbd6; border-radius: 10px; font-size: 14px; box-sizing: border-box; outline: none; background: white;">
-                ${['Furniture','Seating','Decor','Storage & Tables','Lighting'].map(c => `<option value="${c}" ${product.category === c ? 'selected' : ''}>${c}</option>`).join('')}
+              <label style="font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #78716c; display: block; margin-bottom: 8px;">Category</label>
+              <select name="category" style="width: 100%; padding: 16px; border: 1px solid rgba(197, 200, 188, 0.5); border-radius: 12px; font-size: 15px; box-sizing: border-box; outline: none; background: rgba(255,255,255,0.5); transition: 0.3s;">
+                ${['None','Furniture','Seating','Decor','Storage & Tables','Lighting'].map(c => `<option value="${c.toLowerCase()}" ${product.category?.toLowerCase() === c.toLowerCase() ? 'selected' : ''}>${c}</option>`).join('')}
               </select>
             </div>
             <div>
-              <label style="font-size: 12px; font-weight: 600; color: #78716c; display: block; margin-bottom: 6px;">Condition</label>
-              <select name="condition" style="width: 100%; padding: 12px 14px; border: 1px solid #dddbd6; border-radius: 10px; font-size: 14px; box-sizing: border-box; outline: none; background: white;">
+              <label style="font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #78716c; display: block; margin-bottom: 8px;">Condition</label>
+              <select name="condition" style="width: 100%; padding: 16px; border: 1px solid rgba(197, 200, 188, 0.5); border-radius: 12px; font-size: 15px; box-sizing: border-box; outline: none; background: rgba(255,255,255,0.5); transition: 0.3s;">
                 ${['Pristine','Like New','Excellent','Good','Fair'].map(c => `<option value="${c}" ${product.condition === c ? 'selected' : ''}>${c}</option>`).join('')}
               </select>
             </div>
           </div>
-          <div style="display: flex; gap: 12px; margin-top: 8px;">
-            <button type="submit" style="flex: 1; padding: 14px; background: #3d5a30; color: white; border: none; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer;">Save Changes</button>
-            <button type="button" id="cancel-edit" style="padding: 14px 24px; background: white; color: #57534e; border: 1px solid #d6d3d1; border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer;">Cancel</button>
+          <div style="display: flex; gap: 16px; margin-top: 16px;">
+            <button type="submit" class="magnetic-btn" style="flex: 1; padding: 16px; background: #3d5a30; color: white; border: none; border-radius: 12px; font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; box-shadow: 0 12px 24px rgba(61,90,48,0.25);">Save Changes</button>
+            <button type="button" id="cancel-edit" class="magnetic-btn" style="padding: 16px 32px; background: white; color: #1c1917; border: 1px solid rgba(197, 200, 188, 0.8); border-radius: 12px; font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; box-shadow: 0 8px 16px rgba(0,0,0,0.05);">Cancel</button>
           </div>
         </form>
       </div>`;

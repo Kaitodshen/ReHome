@@ -120,7 +120,7 @@ export async function renderAdmin() {
   if (elUsers)    elUsers.textContent    = profiles.length;
   if (elProducts) elProducts.textContent = products.length;
   if (elOrders)   elOrders.textContent   = orders.length;
-  if (elRevenue)  elRevenue.textContent  = `$${formatMoney(totalRevenue)}`;
+  if (elRevenue)  elRevenue.textContent  = `${window.formatCurrency(totalRevenue)}`;
 
   // Tab counts
   const cntUsers    = document.getElementById('adm-count-users');
@@ -209,7 +209,7 @@ export async function renderAdmin() {
         return `<tr>
           <td><img class="adm-thumb" src="${sanitize(p.image_url || '')}" alt="${sanitize(p.title)}" onerror="this.style.background='#f4f3ef';this.alt='No image'"></td>
           <td style="font-weight:600; max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${sanitize(p.title)}</td>
-          <td style="font-weight:600; color:#3d5a30;">$${formatMoney(p.price)}</td>
+          <td style="font-weight:600; color:#3d5a30;">${window.formatCurrency(p.price)}</td>
           <td>${p.stock ?? 0}</td>
           <td>${statusBadge(p.status)}</td>
           <td style="color:#78716c;">${sanitize(sellerName)}</td>
@@ -263,7 +263,7 @@ export async function renderAdmin() {
           <td><code style="font-size:13px; background:#f4f3ef; padding:3px 8px; border-radius:6px; color:#57534e;">${sanitize((o.id || '').slice(0, 8))}</code></td>
           <td style="font-weight:600;">${buyerName}</td>
           <td style="color:#78716c; max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${itemNames}">${itemCount} item${itemCount !== 1 ? 's' : ''}</td>
-          <td style="font-weight:600; color:#3d5a30;">$${formatMoney(o.total)}</td>
+          <td style="font-weight:600; color:#3d5a30;">${window.formatCurrency(o.total)}</td>
           <td>${statusBadge(o.status)}</td>
           <td style="color:#78716c; white-space:nowrap;">${formatDate(o.created_at)}</td>
           <td><button class="adm-btn adm-btn-delete" data-action="delete-order" data-oid="${o.id}">

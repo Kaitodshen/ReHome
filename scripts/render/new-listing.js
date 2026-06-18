@@ -185,7 +185,7 @@ export async function renderNewListing() {
           if (hint) {
             const minP = Math.floor(aiBasePrice * 0.75);
             const maxP = Math.floor(aiBasePrice * 1.25);
-            hint.innerHTML = `AI suggested price: <strong>$${aiBasePrice.toLocaleString()}</strong>. You can adjust between <strong>$${minP.toLocaleString()}</strong> and <strong>$${maxP.toLocaleString()}</strong>.`;
+            hint.innerHTML = `AI suggested price: <strong>${window.formatCurrency(aiBasePrice)}</strong>. You can adjust between <strong>${window.formatCurrency(minP)}</strong> and <strong>${window.formatCurrency(maxP)}</strong>.`;
             hint.style.display = 'block';
           }
         }
@@ -311,7 +311,7 @@ export async function renderNewListing() {
         const btnConfirm = document.getElementById('btn-modal-confirm');
         
         if (modal && modalText && btnCancel && btnConfirm) {
-          modalText.textContent = `You are setting a price that is more than 25% different from the AI's fair market value ($${aiBasePrice.toLocaleString()}). Are you absolutely sure you want to list it at $${price.toLocaleString()}?`;
+          modalText.textContent = `You are setting a price that is more than 25% different from the AI's fair market value (${window.formatCurrency(aiBasePrice)}). Are you absolutely sure you want to list it at ${window.formatCurrency(price)}?`;
           
           const confirmed = await new Promise((resolve) => {
             modal.style.display = 'flex';

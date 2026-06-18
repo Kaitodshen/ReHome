@@ -40,6 +40,16 @@ if(!document.getElementById('rehome-premium-css')) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+   const currencyToggle = document.getElementById('currency-toggle');
+   if (currencyToggle) {
+     const curr = localStorage.getItem('rehome_currency') || 'USD';
+     currencyToggle.value = curr;
+     currencyToggle.addEventListener('change', (e) => {
+       localStorage.setItem('rehome_currency', e.target.value);
+       window.location.reload();
+     });
+   }
+
    document.querySelectorAll('nav a, header a').forEach(a => {
       if(a.textContent.toLowerCase().includes('sell an item') || a.getAttribute('data-route') === 'sell') {
           a.textContent = 'Sell';
@@ -108,7 +118,7 @@ async function boot() {
               
               <div style="background:#f8fafc; border:1px dashed #cbd5e1; padding:24px; border-radius:16px; margin-bottom:32px;">
                 <p style="font-size:13px; color:#64748b; margin:0 0 8px;">Total Amount</p>
-                <h1 style="font-size:36px; color:#0f172a; margin:0; font-weight:800;">$${parseFloat(amount).toLocaleString()}</h1>
+                <h1 style="font-size:36px; color:#0f172a; margin:0; font-weight:800;">${window.formatCurrency(amount)}</h1>
               </div>
               
               <button id="btn-confirm-mobile" style="width:100%; padding:18px; border:none; background:#0ea5e9; border-radius:16px; font-size:16px; font-weight:700; color:white; cursor:pointer; box-shadow:0 10px 20px rgba(14, 165, 233, 0.2);">Confirm Payment</button>

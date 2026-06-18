@@ -297,7 +297,7 @@ export async function renderProfile() {
                     </div>
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                       <span style="font-size: 16px; font-weight: 700; color: #1c1917;">
-                        $${Number(item.price).toFixed(2)}
+                        ${window.formatCurrency(item.price)}
                       </span>
                       ${trackingOrResell}
                     </div>
@@ -359,28 +359,26 @@ export async function renderProfile() {
                    </span>`;
 
               return `
-                <div class="selling-item-card glass-panel" data-product-id="${p.id}" style="overflow:hidden;cursor:pointer;transition:0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
-                  <div style="position:relative;">
+                <div class="prod-card glass-panel" data-product-id="${p.id}" style="position: relative; display: flex; flex-direction: column; cursor: pointer; border-radius: 20px; border: 1px solid rgba(197, 200, 188, 0.4); padding-bottom: 16px; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px);">
+                  <div style="height: 220px; margin-bottom: 16px; position: relative;">
                     <img src="${sanitize(p.image_url || '')}"
-                         style="width:100%;aspect-ratio:4/3;object-fit:cover;"
+                         style="width:100%;height:100%;object-fit:cover;border-radius:20px 20px 0 0;"
                          onerror="this.style.background='#f5f5f4';this.removeAttribute('src')">
-                    <div style="position:absolute;top:8px;right:8px;">${soldBadge}</div>
+                    <div style="position:absolute;top:16px;right:16px;box-shadow: 0 4px 12px rgba(0,0,0,0.1);backdrop-filter:blur(8px);border-radius:99px;">${soldBadge}</div>
                   </div>
-                  <div style="padding:12px;">
-                    <div style="font-weight:700;color:#1c1917;font-size:14px;
-                                white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                  <div style="padding: 0 20px; display: flex; flex-direction: column; flex-grow: 1;">
+                    <div style="font-weight:700;color:#1c1917;font-size:16px;font-family:var(--sans);margin-bottom:8px;line-height:1.4;">
                       ${sanitize(p.title)}
                     </div>
-                    <div style="display:flex;justify-content:space-between;
-                                align-items:center;margin-top:8px;">
-                      <span style="color:#3d5a30;font-weight:600;font-size:14px;">
-                        $${Number(p.price).toFixed(2)}
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:auto;border-top:1px solid rgba(197,200,188,0.3);padding-top:12px;">
+                      <span style="color:#3d5a30;font-weight:800;font-size:18px;">
+                        ${window.formatCurrency(p.price)}
                       </span>
-                      <span style="color:#78716c;font-size:12px;">
+                      <span style="color:#a8a29e;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;">
                         Stock: ${inStock}
                       </span>
                     </div>
-                    <div style="color:#a8a29e;font-size:11px;margin-top:4px;">
+                    <div style="color:#a8a29e;font-size:10px;margin-top:8px;text-transform:uppercase;letter-spacing:0.5px;">
                       Listed ${formatDate(p.created_at)}
                     </div>
                   </div>
@@ -410,33 +408,34 @@ export async function renderProfile() {
           </div>
         `;
       } else {
-        offersList.innerHTML = myOffers.map(offer => {
+        offersList.innerHTML = `<div style="display:grid;gap:16px;">` + myOffers.map(offer => {
           const productTitle = offer.products?.title || 'Unknown Item';
           const productPrice = Number(offer.products?.price || 0);
           const offerPrice = Number(offer.amount || 0);
           const imgUrl = offer.products?.image_url || '';
           
           const statusMap = {
-            pending: { bg: '#fef9c3', color: '#854d0e', label: 'Pending' },
-            accepted: { bg: '#dcfce7', color: '#166534', label: 'Accepted (Added to Cart)' },
-            rejected: { bg: '#fecaca', color: '#991b1b', label: 'Rejected' },
+            pending: { bg: 'rgba(254, 249, 195, 0.8)', color: '#854d0e', label: 'Pending', icon: '<circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>' },
+            accepted: { bg: 'rgba(220, 252, 231, 0.8)', color: '#166534', label: 'Accepted (In Cart)', icon: '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>' },
+            rejected: { bg: 'rgba(254, 202, 202, 0.8)', color: '#991b1b', label: 'Rejected', icon: '<circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line>' },
           };
           const st = statusMap[offer.status] || statusMap.pending;
 
           return `
-            <div class="glass-panel" style="padding:20px;display:flex;align-items:center;gap:20px;transition:0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
-              <img src="${sanitize(imgUrl)}" style="width:64px;height:64px;border-radius:8px;object-fit:cover;" onerror="this.style.display='none'">
+            <div class="glass-panel" style="padding:20px;display:flex;align-items:center;gap:24px;border-radius:20px;border:1px solid rgba(197, 200, 188, 0.4);background:rgba(255,255,255,0.85);backdrop-filter:blur(20px);transition:0.3s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 24px rgba(61,90,48,0.06)'" onmouseout="this.style.transform='none';this.style.boxShadow='none'">
+              <img src="${sanitize(imgUrl)}" style="width:80px;height:80px;border-radius:14px;object-fit:cover;box-shadow:0 4px 12px rgba(0,0,0,0.08);" onerror="this.style.display='none'">
               <div style="flex:1;">
-                <h4 style="margin:0 0 4px;font-size:15px;color:#1c1917;">${sanitize(productTitle)}</h4>
-                <div style="font-size:14px;color:#78716c;margin-bottom:8px;">You offered: <strong style="color:#3d5a30;">$${offerPrice.toLocaleString()}</strong> (Listed: $${productPrice.toLocaleString()})</div>
-                <div style="font-size:12px;color:#a8a29e;">Sent on ${formatDate(offer.created_at)}</div>
+                <h4 style="margin:0 0 6px;font-size:16px;font-weight:700;color:#1c1917;font-family:var(--sans);">${sanitize(productTitle)}</h4>
+                <div style="font-size:14px;color:#78716c;margin-bottom:8px;font-weight:600;">You offered: <strong style="color:#3d5a30;font-size:16px;">${window.formatCurrency(offerPrice)}</strong> <span style="font-size:12px;text-decoration:line-through;color:#a8a29e;margin-left:4px;">${window.formatCurrency(productPrice)}</span></div>
+                <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#a8a29e;">Sent on ${formatDate(offer.created_at)}</div>
               </div>
-              <div>
-                <span style="background:${st.bg};color:${st.color};padding:4px 12px;border-radius:99px;font-size:12px;font-weight:700;">${st.label}</span>
+              <div style="display:flex;align-items:center;gap:6px;background:${st.bg};color:${st.color};padding:8px 16px;border-radius:99px;font-size:12px;font-weight:800;letter-spacing:0.5px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${st.icon}</svg>
+                ${st.label}
               </div>
             </div>
           `;
-        }).join('');
+        }).join('') + `</div>`;
       }
     }
 
@@ -452,14 +451,14 @@ export async function renderProfile() {
           </div>`;
       } else {
         draftsGrid.innerHTML = draftListings.map(p => `
-          <div class="glass-panel" style="overflow:hidden;opacity:0.8;transition:0.2s;cursor:pointer;" onmouseover="this.style.opacity='1'; this.style.transform='translateY(-2px)'" onmouseout="this.style.opacity='0.8'; this.style.transform='none'">
-            <div style="aspect-ratio:4/3;background:rgba(255, 255, 255, 0.5);position:relative;">
-              ${p.image_url ? `<img src="${p.image_url}" style="width:100%;height:100%;object-fit:cover;">` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#a8a29e;">No Image</div>`}
-              <div style="position:absolute;top:10px;right:10px;background:white;font-size:11px;font-weight:700;padding:4px 8px;border-radius:4px;box-shadow:0 2px 4px rgba(0,0,0,0.1);">DRAFT</div>
+          <div class="prod-card glass-panel" style="position:relative;display:flex;flex-direction:column;cursor:pointer;border-radius:20px;border:1px dashed rgba(197,200,188,0.8);background:rgba(255,255,255,0.6);backdrop-filter:blur(10px);transition:0.3s;opacity:0.9;" onmouseover="this.style.opacity='1'; this.style.transform='translateY(-4px)'; this.style.borderColor='rgba(61,90,48,0.5)'" onmouseout="this.style.opacity='0.9'; this.style.transform='none'; this.style.borderColor='rgba(197,200,188,0.8)'">
+            <div style="height:200px;background:rgba(255,255,255,0.5);position:relative;margin-bottom:16px;">
+              ${p.image_url ? `<img src="${p.image_url}" style="width:100%;height:100%;object-fit:cover;border-radius:20px 20px 0 0;filter:grayscale(30%);">` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#a8a29e;font-size:14px;font-weight:600;">No Image</div>`}
+              <div style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.9);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:6px 14px;border-radius:99px;box-shadow:0 4px 12px rgba(0,0,0,0.1);color:#78716c;display:flex;align-items:center;gap:6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> DRAFT</div>
             </div>
-            <div style="padding:16px;">
-              <h4 style="margin:0 0 4px;font-size:15px;font-weight:700;color:#1c1917;">${sanitize(p.title || 'Untitled Draft')}</h4>
-              <p style="margin:0;font-size:14px;color:#78716c;">$${toSafeNumber(p.price).toLocaleString()}</p>
+            <div style="padding:0 20px 20px 20px;">
+              <h4 style="margin:0 0 8px;font-size:16px;font-weight:700;color:#57534e;font-family:var(--sans);">${sanitize(p.title || 'Untitled Draft')}</h4>
+              <p style="margin:0;font-size:18px;font-weight:800;color:#78716c;">${window.formatCurrency(toSafeNumber(p.price))}</p
             </div>
           </div>
         `).join('');
@@ -489,18 +488,26 @@ export async function renderProfile() {
           </div>`;
       } else {
         tabSaved.innerHTML =
-          `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px;">` +
+          `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:24px;">` +
           favorites.map(f => {
             const p = f.products;
             if (!p) return '';
             return `
-              <div class="saved-item-card glass-panel" data-product-id="${p.id}" style="padding:16px;cursor:pointer;transition:0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
-                <img src="${sanitize(p.image_url || '')}"
-                     style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;margin-bottom:12px;"
-                     onerror="this.style.background='#f5f5f4';this.removeAttribute('src')">
-                <div style="font-weight:700;color:#1c1917;font-size:14px;">${sanitize(p.title)}</div>
-                <div style="color:#3d5a30;font-weight:600;font-size:14px;margin-top:4px;">
-                  $${Number(p.price).toFixed(2)}
+              <div class="prod-card glass-panel" data-product-id="${p.id}" style="position:relative;display:flex;flex-direction:column;cursor:pointer;border-radius:20px;border:1px solid rgba(197, 200, 188, 0.4);padding-bottom:16px;background:rgba(255,255,255,0.85);backdrop-filter:blur(20px);transition:0.3s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 24px rgba(61,90,48,0.08)'" onmouseout="this.style.transform='none';this.style.boxShadow='none'">
+                <div style="height:220px;margin-bottom:16px;position:relative;">
+                  <img src="${sanitize(p.image_url || '')}"
+                       style="width:100%;height:100%;object-fit:cover;border-radius:20px 20px 0 0;"
+                       onerror="this.style.background='#f5f5f4';this.removeAttribute('src')">
+                  <div style="position:absolute;top:16px;right:16px;background:white;color:#dc2626;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.1);"><svg width="16" height="16" viewBox="0 0 24 24" fill="#dc2626" stroke="#dc2626" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></div>
+                </div>
+                <div style="padding:0 20px;display:flex;flex-direction:column;flex-grow:1;">
+                  <span style="font-size:11px;font-weight:800;color:#a8a29e;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;">${sanitize(p.category)} &bull; ${sanitize(p.condition)}</span>
+                  <div style="font-weight:700;color:#1c1917;font-size:16px;margin-bottom:12px;font-family:var(--sans);line-height:1.4;">${sanitize(p.title)}</div>
+                  <div style="margin-top:auto;border-top:1px solid rgba(197,200,188,0.3);padding-top:12px;">
+                    <span style="color:#3d5a30;font-weight:800;font-size:18px;">
+                      ${window.formatCurrency(p.price)}
+                    </span>
+                  </div>
                 </div>
               </div>`;
           }).join('') +

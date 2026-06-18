@@ -125,6 +125,16 @@
     .social-icons svg { cursor: pointer; transition: 0.2s; }
     .social-icons svg:hover { color: #3d5a30; }
   </style>
+  <script>
+    window.formatCurrency = function(amount) {
+      const currency = localStorage.getItem('rehome_currency') || 'USD';
+      const num = Number(amount) || 0;
+      if (currency === 'IDR') {
+        return 'Rp ' + (num * 16000).toLocaleString('id-ID', {minimumFractionDigits: 0, maximumFractionDigits: 0});
+      }
+      return '$' + num.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 2});
+    };
+  </script>
 </head>
 <body>
   
@@ -276,6 +286,10 @@
         </div>
         
         <div class="nav-actions-new">
+          <select id="currency-toggle" style="background:transparent;border:1px solid rgba(197,200,188,0.5);color:#3d5a30;font-weight:700;font-size:13px;padding:6px 10px;border-radius:8px;outline:none;cursor:pointer;">
+            <option value="USD">USD</option>
+            <option value="IDR">IDR</option>
+          </select>
           <div class="search-wrapper">
             <div class="search-input-box" id="global-search-box">
               <input type="text" id="global-search-input" placeholder="Search treasures..." autocomplete="off">

@@ -23,13 +23,16 @@ export async function callGeminiAPI(key, base64Image, categoryHint = 'Furniture'
   }
   const base64Data = base64Image.includes(',') ? base64Image.split(',')[1] : base64Image;
 
-  const prompt = `You are an expert luxury furniture appraiser. Analyze this image and estimate its real market value.
+  const isNone = categoryHint.toLowerCase() === 'none';
+  const role = isNone ? "general object appraiser" : "expert luxury furniture appraiser";
+  
+  const prompt = `You are an ${role}. Analyze this image and estimate its real market value.
   Category context: ${categoryHint}. Condition context: ${conditionHint}. 
   Return ONLY a raw JSON object. Do NOT copy the placeholder values below; you MUST provide your own realistic estimates based on the image. The JSON must have these exact keys:
   {
     "title": "<A short, elegant title for the item>",
     "price": <numeric value representing your estimated retail price in USD, e.g. 850>,
-    "description": "<A sophisticated 2-sentence description of the item and its design legacy.>",
+    "description": "<A sophisticated 2-sentence description of the item.>",
     "maker": "<Designer or Brand>",
     "category": "${categoryHint}",
     "condition": "${conditionHint}",

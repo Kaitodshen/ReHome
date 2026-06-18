@@ -133,7 +133,7 @@ function renderPage(catalog, countEl) {
       <div class="prod-info" style="margin-top:12px;">
         <span style="font-size:12px;color:#78716c;font-weight:600;">${safeCondition} · ${safeCategory}</span>
         <h3 style="font-size:16px;margin:4px 0;">${safeTitle}</h3>
-        <strong style="color:#3d5a30;">$${p.price}</strong>
+        <strong style="color:#3d5a30;">${window.formatCurrency(p.price)}</strong>
         ${cartControls}
       </div>
     </div>`;

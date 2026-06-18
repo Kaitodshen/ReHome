@@ -60,10 +60,10 @@ export async function renderConfirmation() {
 
       // Populate totals from the order record
       const subtotalEl = document.getElementById("order-subtotal");
-      if (subtotalEl) subtotalEl.textContent = `$${toSafeMoney(order.subtotal)}`;
+      if (subtotalEl) subtotalEl.textContent = `${window.formatCurrency(toSafeMoney(order.subtotal))}`;
       
       const totalEl = document.getElementById("order-total");
-      if (totalEl) totalEl.textContent = `$${toSafeMoney(order.total)}`;
+      if (totalEl) totalEl.textContent = `${window.formatCurrency(toSafeMoney(order.total))}`;
 
       const impactPointsEl = document.getElementById("impact-points");
       // Impact points = carbon_offset * 10
@@ -93,7 +93,7 @@ export async function renderConfirmation() {
               <img src="${safeImage}" alt="${safeTitle}" class="product-img" style="background: #fbfaf9;">
               <div class="product-info">
                 <h3 class="product-title">${safeTitle}</h3>
-                <div class="product-price">$${safePrice}</div>
+                <div class="product-price">${window.formatCurrency(safePrice)}</div>
               </div>
             </a>
           `;

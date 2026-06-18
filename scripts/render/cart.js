@@ -103,9 +103,9 @@ export async function renderCart() {
       
       const total = subtotal + shipping - carbonOffset;
 
-      if (subtotalEl) subtotalEl.textContent = `$${subtotal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-      if (offsetEl) offsetEl.textContent = `-$${carbonOffset.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-      if (totalEl) totalEl.textContent = `$${Math.max(0, total).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+      if (subtotalEl) subtotalEl.textContent = `${window.formatCurrency(subtotal)}`;
+      if (offsetEl) offsetEl.textContent = `-${window.formatCurrency(carbonOffset)}`;
+      if (totalEl) totalEl.textContent = `${window.formatCurrency(Math.max(0, total))}`;
       if (subtitleEl) subtitleEl.textContent = `${totalQuantity} treasures curated for a more sustainable home.`;
     };
 
@@ -121,13 +121,13 @@ export async function renderCart() {
         const safeQty = toSafeNumber(item.quantity, 1);
         const safeCartId = sanitizeShortText(item.id);
 
-        let priceHtml = `<div class="cart-item-price">$${safePrice}</div>`;
+        let priceHtml = `<div class="cart-item-price">${window.formatCurrency(safePrice)}</div>`;
         if (item.has_offer_discount) {
           const origPrice = toSafeNumber(product.original_price).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
           priceHtml = `
             <div class="cart-item-price" style="display:flex; flex-direction:column; align-items:flex-end;">
-              <span style="font-size:12px; color:#a8a29e; text-decoration:line-through;">$${origPrice}</span>
-              <span style="color:#3d5a30;">$${safePrice}</span>
+              <span style="font-size:12px; color:#a8a29e; text-decoration:line-through;">${window.formatCurrency(origPrice)}</span>
+              <span style="color:#3d5a30;">${window.formatCurrency(safePrice)}</span>
               <span style="background:#dcfce7; color:#166534; padding:2px 6px; border-radius:4px; font-size:10px; font-weight:700; text-transform:uppercase; margin-top:4px;">Offer Accepted</span>
             </div>
           `;

@@ -11,11 +11,27 @@ async function checkoutCart() {
 
   const { data: cartItems, error: cartError } = await supabase
     .from("cart_items")
-    .select("id, quantity, products(id, title, price, carbon_offset, stock, seller_id)")
+    .select("id, quantity, product_id, products(id, title, price, carbon_offset, stock, seller_id)")
     .eq("user_id", user.id);
 
   if (cartError) throw cartError;
   if (!cartItems?.length) throw new Error("Your cart is empty.");
+
+  // Apply accepted offer discounts
+  const { data: offers } = await supabase
+    .from("offers")
+    .select("product_id, amount")
+    .eq("buyer_id", user.id)
+    .eq("status", "accepted");
+
+  if (offers && offers.length > 0) {
+    cartItems.forEach(item => {
+      const offer = offers.find(o => o.product_id === item.product_id || (item.products && o.product_id === item.products.id));
+      if (offer && item.products) {
+        item.products.price = offer.amount;
+      }
+    });
+  }
 
   const subtotal = cartItems.reduce((sum, item) => {
     const quantity = clampInteger(item.quantity, 1, 99, 1);
@@ -172,7 +188,7 @@ export async function renderCheckout() {
       if (summaryBox) {
         const div = document.createElement("div");
         div.className = "summary-item";
-        div.innerHTML = `<span>${p.title} ${q > 1 ? 'x'+q : ''}</span>$${price.toLocaleString()}`;
+        div.innerHTML = `<span>${p.title} ${q > 1 ? 'x'+q : ''}</span>${window.formatCurrency(price)}`;
         summaryBox.appendChild(div);
       }
     });

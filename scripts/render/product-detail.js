@@ -123,7 +123,7 @@ export async function renderProductDetail() {
             </div>
             
             <h1 style="font-family: var(--serif); font-size: 42px; color: #1c1917; margin: 0 0 16px 0; line-height: 1.1;">${safeTitle}</h1>
-            <div style="font-size: 28px; color: #78716c; font-weight: 500; margin-bottom: 32px;">$${safePrice}</div>
+            <div style="font-size: 28px; color: #78716c; font-weight: 500; margin-bottom: 32px;">${window.formatCurrency(safePrice)}</div>
             
             <div style="margin-bottom: 24px;">
               <span style="font-size: 13px; color: #78716c; display: block; margin-bottom: 8px;">Condition</span>
@@ -159,7 +159,7 @@ export async function renderProductDetail() {
                 
                 <div style="background:#f5f4f0; border-radius:12px; padding:16px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
                   <span style="font-size:13px; color:#78716c; font-weight:600;">Listed Price</span>
-                  <span style="font-size:20px; font-weight:700; color:#3d5a30;">$${safePrice}</span>
+                  <span style="font-size:20px; font-weight:700; color:#3d5a30;">${window.formatCurrency(safePrice)}</span>
                 </div>
                 
                 <label style="display:block; margin-bottom:16px;">

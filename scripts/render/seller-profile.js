@@ -121,7 +121,7 @@ export async function renderSellerProfile() {
                     <span style="font-size: 11px; font-weight: 800; color: #78716c; letter-spacing: 0.5px; text-transform: uppercase;">${safeMaker}</span>
                     <h3 style="font-size: 17px; margin: 6px 0 12px; color: #1c1917; font-weight: 700;">${safeTitle}</h3>
                 </div>
-                <strong style="color: #3d5a30; font-size: 18px;">$${safePrice}</strong>
+                <strong style="color: #3d5a30; font-size: 18px;">${window.formatCurrency(safePrice)}</strong>
               </div>
             </article>
           `;
