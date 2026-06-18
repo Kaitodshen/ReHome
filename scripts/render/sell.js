@@ -319,23 +319,20 @@ export async function renderSell() {
       const hasImg = !!imgSrc;
 
       return `
-        <article style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.04); border: 1px solid rgba(197,200,188,0.4); display: flex; flex-direction: column; cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 12px 24px rgba(61,90,48,0.08)'" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.04)'">
-           <div style="position: relative; height: 260px; background: #f5f4f0; overflow: hidden; padding: 0;">
-              ${hasImg ? `<img src="${sanitize(imgSrc)}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'" onerror="this.style.display='none'">` : `<div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #a8a29e; font-size: 14px; font-weight: 600;">No Image</div>`}
-            <article class="prod-card glass-panel" data-id="${p.id}" style="position: relative; display: flex; flex-direction: column; cursor: pointer; border-radius: 20px; border: 1px solid rgba(197, 200, 188, 0.4); padding-bottom: 16px; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px);">
-              <div style="height: 280px; margin-bottom: 16px; position: relative;">
-                <img src="${sanitize(imgSrc)}" alt="${sanitize(p.title)}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px 20px 0 0;">
-                <div style="position: absolute; top: 16px; left: 16px; padding: 6px 14px; border-radius: 99px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; ${statusStyle.bg}; color: ${statusStyle.color}; box-shadow: 0 4px 12px rgba(0,0,0,0.1); backdrop-filter: blur(8px);">${statusStyle.label}</div>
-              </div>
-              <div style="padding: 0 20px; display: flex; flex-direction: column; flex-grow: 1;">
-                <span style="font-size: 11px; font-weight: 800; color: #a8a29e; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px;">${sanitize(p.category)} &bull; ${sanitize(p.condition)}</span>
-                <h3 style="margin: 0 0 16px 0; font-size: 17px; font-weight: 700; color: #1c1917; flex-grow: 1; font-family: var(--sans); line-height: 1.4;">${sanitize(p.title)}</h3>
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-top: auto; border-top: 1px solid rgba(197, 200, 188, 0.3); padding-top: 16px;">
-                  <div style="font-size: 20px; font-weight: 800; color: #3d5a30;">${window.formatCurrency(p.price)}</div>
-                  <button class="btn-edit-listing magnetic-btn" data-id="${p.id}" style="background: rgba(156, 175, 136, 0.15); border: none; color: #3d5a30; font-size: 12px; font-weight: 800; cursor: pointer; padding: 8px 16px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.5px; transition: 0.2s;" onmouseover="this.style.background='rgba(156, 175, 136, 0.25)'" onmouseout="this.style.background='rgba(156, 175, 136, 0.15)'">Edit</button>
-                </div>
-              </div>
-            </article>`;
+        <article class="prod-card glass-panel" data-id="${p.id}" style="position: relative; display: flex; flex-direction: column; cursor: pointer; border-radius: 20px; border: 1px solid rgba(197, 200, 188, 0.4); padding-bottom: 16px; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 12px 24px rgba(61,90,48,0.08)'" onmouseout="this.style.transform='none'; this.style.boxShadow='none'">
+          <div style="height: 280px; margin-bottom: 16px; position: relative;">
+            ${hasImg ? `<img src="${sanitize(imgSrc)}" alt="${sanitize(p.title)}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px 20px 0 0;" onerror="this.style.display='none'">` : `<div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #a8a29e; font-size: 14px; font-weight: 600; background: #f5f4f0; border-radius: 20px 20px 0 0;">No Image</div>`}
+            <div style="position: absolute; top: 16px; left: 16px; padding: 6px 14px; border-radius: 99px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; ${sc.bg}; color: ${sc.color}; box-shadow: 0 4px 12px rgba(0,0,0,0.1); backdrop-filter: blur(8px);">${sc.label}</div>
+          </div>
+          <div style="padding: 0 20px; display: flex; flex-direction: column; flex-grow: 1;">
+            <span style="font-size: 11px; font-weight: 800; color: #a8a29e; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px;">${sanitize(p.category)} &bull; ${sanitize(p.condition)}</span>
+            <h3 style="margin: 0 0 16px 0; font-size: 17px; font-weight: 700; color: #1c1917; flex-grow: 1; font-family: var(--sans); line-height: 1.4;">${sanitize(p.title)}</h3>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: auto; border-top: 1px solid rgba(197, 200, 188, 0.3); padding-top: 16px;">
+              <div style="font-size: 20px; font-weight: 800; color: #3d5a30;">${window.formatCurrency(p.price)}</div>
+              <button class="btn-edit-listing magnetic-btn" data-id="${p.id}" style="background: rgba(156, 175, 136, 0.15); border: none; color: #3d5a30; font-size: 12px; font-weight: 800; cursor: pointer; padding: 8px 16px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.5px; transition: 0.2s;" onmouseover="this.style.background='rgba(156, 175, 136, 0.25)'" onmouseout="this.style.background='rgba(156, 175, 136, 0.15)'">Edit</button>
+            </div>
+          </div>
+        </article>`;
     }).join('');
 
     // New listing card

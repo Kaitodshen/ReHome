@@ -95,10 +95,10 @@ export function renderCurated() {
         scanOverlay.style.display = "none";
         
         // Update DOM
-        document.getElementById("ai-price-value").textContent = "$" + generatedData.price.toLocaleString();
-        
+        document.getElementById("ai-price-value").textContent = window.formatCurrency(generatedData.price);
+        document.querySelector("#ai-price-value + .price-currency").style.display = 'none';
         if (document.getElementById("ai-price-accuracy-title")) {
-          document.getElementById("ai-price-accuracy-title").textContent = generatedData.estimated_fair_price ? "Fair Price: $" + generatedData.estimated_fair_price.toLocaleString() : "Excellent Fair Price";
+          document.getElementById("ai-price-accuracy-title").textContent = generatedData.estimated_fair_price ? "Fair Price: " + window.formatCurrency(generatedData.estimated_fair_price) : "Excellent Fair Price";
           document.getElementById("ai-price-accuracy-desc").textContent = generatedData.price_accuracy_note || "Within 3% of market average.";
         }
         if (document.getElementById("ai-market-sentiment")) {
