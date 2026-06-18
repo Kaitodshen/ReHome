@@ -1,4 +1,6 @@
+import json
 
+html_content = """
 <div style="max-width: 1440px; margin: 0 auto; padding: 0 24px 120px; font-family: var(--sans); color: #201a1a; box-sizing: border-box; background: #f7f9f8; min-height: 100vh;">
 
   <!-- Top Profile Container -->
@@ -177,3 +179,9 @@
     </div>
   </div>
 </div>
+"""
+
+with open("d:\\Desktop\\flutter\\TugasFigma\\views\\profile.html", "w", encoding="utf-8") as f:
+    f.write(html_content)
+
+print("Updated profile.html")

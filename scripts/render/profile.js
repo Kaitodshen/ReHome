@@ -260,52 +260,51 @@ export async function renderProfile() {
                    quantity: item.quantity
                 };
                 
-                trackingOrResell = `<span style="font-size: 12px; color: #a8a29e; font-weight: 600; cursor: pointer;" onmouseover="this.style.color='#3d5a30'" onmouseout="this.style.color='#a8a29e'">Re-sell Item</span>`;
+                trackingOrResell = `<span style="font-size: 14px; color: #536E5B; font-weight: 500; cursor: pointer;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Re-sell Item</span>`;
                 
                 actionsHtml = `
                   <div style="display: flex; gap: 8px; margin-top: 16px;">
-                    <button class="btn-deliver-vault" data-item-id="${item.id}" style="flex: 1; padding: 10px; background: #3d5a30; color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer;">Deliver</button>
-                    <button class="btn-resell-vault" data-item-id="${item.id}" data-product='${sanitize(JSON.stringify(productData))}' style="flex: 1; padding: 10px; background: white; color: #1c1917; border: 1px solid #d6d3d1; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer;">Resell</button>
+                    <button class="btn-deliver-vault" data-item-id="${item.id}" style="flex: 1; padding: 10px; background: #536E5B; color: white; border: none; border-radius: 8px; font-weight: 500; font-size: 14px; cursor: pointer;">Deliver</button>
+                    <button class="btn-resell-vault" data-item-id="${item.id}" data-product='${sanitize(JSON.stringify(productData))}' style="flex: 1; padding: 10px; background: white; color: #111827; border: 1px solid #d1d5db; border-radius: 8px; font-weight: 500; font-size: 14px; cursor: pointer;">Resell</button>
                   </div>
                 `;
               } else {
                 trackingOrResell = `
-                  <div style="position: relative; display: inline-block;" onmouseover="this.querySelector('.track-tooltip').style.opacity='1'; this.querySelector('.track-tooltip').style.visibility='visible'; this.querySelector('span').style.color='#3d5a30'" onmouseout="this.querySelector('.track-tooltip').style.opacity='0'; this.querySelector('.track-tooltip').style.visibility='hidden'; this.querySelector('span').style.color='#a8a29e'">
-                    <span style="font-size: 12px; color: #a8a29e; font-weight: 600; cursor: pointer; transition: 0.2s;">Track Order</span>
-                    <div class="track-tooltip" style="position: absolute; bottom: 100%; right: 0; margin-bottom: 8px; width: 220px; background: white; border: 1px solid #e7e5e4; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); padding: 16px; opacity: 0; visibility: hidden; transition: 0.2s; z-index: 10; text-align: left;">
-                      <div style="font-size: 10px; font-weight: 800; color: #3d5a30; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Delivery Progress</div>
-                      <div style="font-size: 14px; font-weight: 700; color: #1c1917; text-transform: capitalize; margin-bottom: 4px;">Status: ${sanitize(statusDisplay)}</div>
-                      <div style="font-size: 12px; color: #78716c;">Item is safely handled by our eco-logistics partner.</div>
+                  <div style="position: relative; display: inline-block;" onmouseover="this.querySelector('.track-tooltip').style.opacity='1'; this.querySelector('.track-tooltip').style.visibility='visible'; this.querySelector('span').style.textDecoration='underline'" onmouseout="this.querySelector('.track-tooltip').style.opacity='0'; this.querySelector('.track-tooltip').style.visibility='hidden'; this.querySelector('span').style.textDecoration='none'">
+                    <span style="font-size: 14px; color: #536E5B; font-weight: 500; cursor: pointer; transition: 0.2s;">Track Order</span>
+                    <div class="track-tooltip" style="position: absolute; bottom: 100%; right: 0; margin-bottom: 8px; width: 220px; background: white; border: 1px solid #e5e7eb; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); padding: 16px; opacity: 0; visibility: hidden; transition: 0.2s; z-index: 10; text-align: left;">
+                      <div style="font-size: 10px; font-weight: 700; color: #536E5B; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Delivery Progress</div>
+                      <div style="font-size: 14px; font-weight: 500; color: #111827; text-transform: capitalize; margin-bottom: 4px;">Status: ${sanitize(statusDisplay)}</div>
+                      <div style="font-size: 12px; color: #6b7280;">Item is safely handled by our eco-logistics partner.</div>
                     </div>
                   </div>
                 `;
               }
               
               return `
-                <div class="purchase-item-card" data-product-id="${item.product_id}" data-order-id="${order.id}" data-status="${sanitize(statusDisplay)}" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid #f0ede8; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 30px rgba(0,0,0,0.08)'" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 20px rgba(0,0,0,0.03)'">
-                  <img src="${sanitize(imgUrl)}" style="width: 100%; height: 280px; object-fit: cover;" onerror="this.style.background='#f5f5f4';this.removeAttribute('src')">
-                  <div style="padding: 24px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                      <span style="background: #f5f4f0; color: #78716c; font-size: 11px; padding: 4px 10px; border-radius: 99px; font-weight: 700; text-transform: capitalize;">${sanitize(statusDisplay)}</span>
-                      <span style="font-size: 12px; color: #a8a29e; font-weight: 600;">${formatDate(order.created_at)}</span>
+                <article class="purchase-item-card group" data-product-id="${item.product_id}" data-order-id="${order.id}" data-status="${sanitize(statusDisplay)}" style="background: white; border-radius: 1.5rem; overflow: hidden; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); border: 1px solid #f3f4f6; display: flex; flex-direction: column; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.boxShadow='0 10px 15px -3px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='0 1px 2px 0 rgba(0,0,0,0.05)'">
+                  <div style="aspect-ratio: 4/3; background: #f3f4f6; position: relative; overflow: hidden;">
+                    <img src="${sanitize(imgUrl)}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" onerror="this.style.background='#f3f4f6';this.removeAttribute('src')">
+                  </div>
+                  <div style="padding: 24px; display: flex; flex-direction: column; flex: 1;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                      <span style="background: #f3f4f6; color: #4b5563; font-size: 12px; padding: 4px 12px; border-radius: 9999px; font-weight: 500; text-transform: capitalize;">${sanitize(statusDisplay)}</span>
+                      <span style="font-size: 14px; color: #6b7280;">${formatDate(order.created_at)}</span>
                     </div>
-                    <div class="purchase-title" style="font-size: 18px; font-weight: 700; color: #1c1917; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                      ${sanitize(item.title)}
-                    </div>
-                    <div style="font-size: 14px; color: #78716c; margin-bottom: 24px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
-                      ${sanitize(desc)}
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                      <span style="font-size: 16px; font-weight: 700; color: #1c1917;">
-                        ${window.formatCurrency(item.price)}
-                      </span>
+                    <h3 style="font-family: var(--serif, 'Playfair Display', serif); font-size: 20px; color: #111827; margin: 0 0 8px;">${sanitize(item.title)}</h3>
+                    <p style="color: #6b7280; font-size: 14px; margin: 0 0 24px; flex: 1; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${sanitize(desc)}</p>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; border-top: 1px solid #f3f4f6; padding-top: 16px; margin-top: auto;">
+                      <div>
+                        <div style="font-size: 12px; color: #6b7280; margin-bottom: 4px;">Total</div>
+                        <div style="font-weight: 500; color: #111827;">${window.formatCurrency(item.price)}</div>
+                      </div>
                       ${trackingOrResell}
                     </div>
                     ${actionsHtml}
                   </div>
-                </div>`;
+                </article>`;
             });
-          }).join('') + `</div>`;
+          }).join('');
       }
     }
 
@@ -349,40 +348,35 @@ export async function renderProfile() {
               const totalSold = (p.order_items || []).reduce((sum, oi) => sum + (oi.quantity || 0), 0);
               const inStock = p.stock !== null ? p.stock : '—';
               const soldBadge = totalSold > 0
-                ? `<span style="background:#dcfce7;color:#166534;padding:2px 8px;
-                               border-radius:99px;font-size:11px;font-weight:600;">
+                ? `<span style="background: white; color: #166534; padding: 4px 12px;
+                               border-radius: 9999px; font-size: 12px; font-weight: 500; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
                      ${totalSold} sold
                    </span>`
-                : `<span style="background:#f5f5f4;color:#78716c;padding:2px 8px;
-                               border-radius:99px;font-size:11px;font-weight:600;">
+                : `<span style="background: white; color: #6b7280; padding: 4px 12px;
+                               border-radius: 9999px; font-size: 12px; font-weight: 500; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
                      Not sold yet
                    </span>`;
 
               return `
-                <div class="prod-card glass-panel" data-product-id="${p.id}" style="position: relative; display: flex; flex-direction: column; cursor: pointer; border-radius: 20px; border: 1px solid rgba(197, 200, 188, 0.4); padding-bottom: 16px; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px);">
-                  <div style="height: 220px; margin-bottom: 16px; position: relative;">
-                    <img src="${sanitize(p.image_url || '')}"
-                         style="width:100%;height:100%;object-fit:cover;border-radius:20px 20px 0 0;"
-                         onerror="this.style.background='#f5f5f4';this.removeAttribute('src')">
-                    <div style="position:absolute;top:16px;right:16px;box-shadow: 0 4px 12px rgba(0,0,0,0.1);backdrop-filter:blur(8px);border-radius:99px;">${soldBadge}</div>
+                <article class="prod-card group" data-product-id="${p.id}" style="background: white; border-radius: 1.5rem; overflow: hidden; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); border: 1px solid #f3f4f6; display: flex; flex-direction: column; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.boxShadow='0 10px 15px -3px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='0 1px 2px 0 rgba(0,0,0,0.05)'">
+                  <div style="aspect-ratio: 4/3; background: #f3f4f6; position: relative; overflow: hidden;">
+                    <img src="${sanitize(p.image_url || '')}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" onerror="this.style.background='#f3f4f6';this.removeAttribute('src')">
+                    <div style="position: absolute; top: 16px; right: 16px;">${soldBadge}</div>
                   </div>
-                  <div style="padding: 0 20px; display: flex; flex-direction: column; flex-grow: 1;">
-                    <div style="font-weight:700;color:#1c1917;font-size:16px;font-family:var(--sans);margin-bottom:8px;line-height:1.4;">
-                      ${sanitize(p.title)}
+                  <div style="padding: 24px; display: flex; flex-direction: column; flex: 1;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                      <span style="font-size: 14px; color: #6b7280;">Listed ${formatDate(p.created_at)}</span>
+                      <span style="font-size: 14px; color: #6b7280;">Stock: ${inStock}</span>
                     </div>
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:auto;border-top:1px solid rgba(197,200,188,0.3);padding-top:12px;">
-                      <span style="color:#3d5a30;font-weight:800;font-size:18px;">
-                        ${window.formatCurrency(p.price)}
-                      </span>
-                      <span style="color:#a8a29e;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;">
-                        Stock: ${inStock}
-                      </span>
-                    </div>
-                    <div style="color:#a8a29e;font-size:10px;margin-top:8px;text-transform:uppercase;letter-spacing:0.5px;">
-                      Listed ${formatDate(p.created_at)}
+                    <h3 style="font-family: var(--serif, 'Playfair Display', serif); font-size: 20px; color: #111827; margin: 0 0 16px; flex: 1; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${sanitize(p.title)}</h3>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; border-top: 1px solid #f3f4f6; padding-top: 16px; margin-top: auto;">
+                      <div>
+                        <div style="font-size: 12px; color: #6b7280; margin-bottom: 4px;">Price</div>
+                        <div style="font-weight: 500; color: #111827;">${window.formatCurrency(p.price)}</div>
+                      </div>
                     </div>
                   </div>
-                </div>`;
+                </article>`;
             }).join('')}
           </div>`;
       }
@@ -422,15 +416,15 @@ export async function renderProfile() {
           const st = statusMap[offer.status] || statusMap.pending;
 
           return `
-            <div class="glass-panel" style="padding:20px;display:flex;align-items:center;gap:24px;border-radius:20px;border:1px solid rgba(197, 200, 188, 0.4);background:rgba(255,255,255,0.85);backdrop-filter:blur(20px);transition:0.3s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 24px rgba(61,90,48,0.06)'" onmouseout="this.style.transform='none';this.style.boxShadow='none'">
-              <img src="${sanitize(imgUrl)}" style="width:80px;height:80px;border-radius:14px;object-fit:cover;box-shadow:0 4px 12px rgba(0,0,0,0.08);" onerror="this.style.display='none'">
-              <div style="flex:1;">
-                <h4 style="margin:0 0 6px;font-size:16px;font-weight:700;color:#1c1917;font-family:var(--sans);">${sanitize(productTitle)}</h4>
-                <div style="font-size:14px;color:#78716c;margin-bottom:8px;font-weight:600;">You offered: <strong style="color:#3d5a30;font-size:16px;">${window.formatCurrency(offerPrice)}</strong> <span style="font-size:12px;text-decoration:line-through;color:#a8a29e;margin-left:4px;">${window.formatCurrency(productPrice)}</span></div>
-                <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#a8a29e;">Sent on ${formatDate(offer.created_at)}</div>
+            <div style="padding: 24px; display: flex; align-items: center; gap: 24px; border-radius: 1.5rem; border: 1px solid #f3f4f6; background: white; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 10px 15px -3px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 1px 2px 0 rgba(0,0,0,0.05)'">
+              <img src="${sanitize(imgUrl)}" style="width: 80px; height: 80px; border-radius: 12px; object-fit: cover; background: #f3f4f6;" onerror="this.style.display='none'">
+              <div style="flex: 1;">
+                <h4 style="margin: 0 0 8px; font-family: var(--serif, 'Playfair Display', serif); font-size: 18px; color: #111827;">${sanitize(productTitle)}</h4>
+                <div style="font-size: 14px; color: #4b5563; margin-bottom: 8px;">You offered: <strong style="color: #111827; font-weight: 500;">${window.formatCurrency(offerPrice)}</strong> <span style="text-decoration: line-through; color: #9ca3af; margin-left: 8px;">${window.formatCurrency(productPrice)}</span></div>
+                <div style="font-size: 12px; color: #9ca3af;">Sent on ${formatDate(offer.created_at)}</div>
               </div>
-              <div style="display:flex;align-items:center;gap:6px;background:${st.bg};color:${st.color};padding:8px 16px;border-radius:99px;font-size:12px;font-weight:800;letter-spacing:0.5px;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${st.icon}</svg>
+              <div style="display: flex; align-items: center; gap: 8px; background: ${st.bg}; color: ${st.color}; padding: 6px 16px; border-radius: 9999px; font-size: 12px; font-weight: 500;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${st.icon}</svg>
                 ${st.label}
               </div>
             </div>
@@ -451,16 +445,21 @@ export async function renderProfile() {
           </div>`;
       } else {
         draftsGrid.innerHTML = draftListings.map(p => `
-          <div class="prod-card glass-panel" style="position:relative;display:flex;flex-direction:column;cursor:pointer;border-radius:20px;border:1px dashed rgba(197,200,188,0.8);background:rgba(255,255,255,0.6);backdrop-filter:blur(10px);transition:0.3s;opacity:0.9;" onmouseover="this.style.opacity='1'; this.style.transform='translateY(-4px)'; this.style.borderColor='rgba(61,90,48,0.5)'" onmouseout="this.style.opacity='0.9'; this.style.transform='none'; this.style.borderColor='rgba(197,200,188,0.8)'">
-            <div style="height:200px;background:rgba(255,255,255,0.5);position:relative;margin-bottom:16px;">
-              ${p.image_url ? `<img src="${p.image_url}" style="width:100%;height:100%;object-fit:cover;border-radius:20px 20px 0 0;filter:grayscale(30%);">` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#a8a29e;font-size:14px;font-weight:600;">No Image</div>`}
-              <div style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.9);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:6px 14px;border-radius:99px;box-shadow:0 4px 12px rgba(0,0,0,0.1);color:#78716c;display:flex;align-items:center;gap:6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> DRAFT</div>
+          <article class="prod-card group" style="background: white; border-radius: 1.5rem; overflow: hidden; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); border: 1px dashed #d1d5db; display: flex; flex-direction: column; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='#9ca3af'" onmouseout="this.style.borderColor='#d1d5db'">
+            <div style="aspect-ratio: 4/3; background: #f3f4f6; position: relative; overflow: hidden;">
+              ${p.image_url ? `<img src="${p.image_url}" style="width:100%;height:100%;object-fit:cover;filter:grayscale(30%);">` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#9ca3af;font-size:14px;">No Image</div>`}
+              <div style="position: absolute; top: 16px; right: 16px; background: white; color: #6b7280; font-size: 12px; font-weight: 500; padding: 4px 12px; border-radius: 9999px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> DRAFT</div>
             </div>
-            <div style="padding:0 20px 20px 20px;">
-              <h4 style="margin:0 0 8px;font-size:16px;font-weight:700;color:#57534e;font-family:var(--sans);">${sanitize(p.title || 'Untitled Draft')}</h4>
-              <p style="margin:0;font-size:18px;font-weight:800;color:#78716c;">${window.formatCurrency(toSafeNumber(p.price))}</p
+            <div style="padding: 24px; display: flex; flex-direction: column; flex: 1;">
+              <h3 style="font-family: var(--serif, 'Playfair Display', serif); font-size: 20px; color: #111827; margin: 0 0 16px; flex: 1;">${sanitize(p.title || 'Untitled Draft')}</h3>
+              <div style="display: flex; justify-content: space-between; align-items: flex-end; border-top: 1px solid #f3f4f6; padding-top: 16px; margin-top: auto;">
+                <div>
+                  <div style="font-size: 12px; color: #6b7280; margin-bottom: 4px;">Price</div>
+                  <div style="font-weight: 500; color: #111827;">${window.formatCurrency(toSafeNumber(p.price))}</div>
+                </div>
+              </div>
             </div>
-          </div>
+          </article>
         `).join('');
       }
     }
@@ -488,28 +487,29 @@ export async function renderProfile() {
           </div>`;
       } else {
         tabSaved.innerHTML =
-          `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:24px;">` +
+          `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:32px;">` +
           favorites.map(f => {
             const p = f.products;
             if (!p) return '';
             return `
-              <div class="prod-card glass-panel" data-product-id="${p.id}" style="position:relative;display:flex;flex-direction:column;cursor:pointer;border-radius:20px;border:1px solid rgba(197, 200, 188, 0.4);padding-bottom:16px;background:rgba(255,255,255,0.85);backdrop-filter:blur(20px);transition:0.3s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 24px rgba(61,90,48,0.08)'" onmouseout="this.style.transform='none';this.style.boxShadow='none'">
-                <div style="height:220px;margin-bottom:16px;position:relative;">
-                  <img src="${sanitize(p.image_url || '')}"
-                       style="width:100%;height:100%;object-fit:cover;border-radius:20px 20px 0 0;"
-                       onerror="this.style.background='#f5f5f4';this.removeAttribute('src')">
-                  <div style="position:absolute;top:16px;right:16px;background:white;color:#dc2626;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.1);"><svg width="16" height="16" viewBox="0 0 24 24" fill="#dc2626" stroke="#dc2626" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></div>
-                </div>
-                <div style="padding:0 20px;display:flex;flex-direction:column;flex-grow:1;">
-                  <span style="font-size:11px;font-weight:800;color:#a8a29e;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;">${sanitize(p.category)} &bull; ${sanitize(p.condition)}</span>
-                  <div style="font-weight:700;color:#1c1917;font-size:16px;margin-bottom:12px;font-family:var(--sans);line-height:1.4;">${sanitize(p.title)}</div>
-                  <div style="margin-top:auto;border-top:1px solid rgba(197,200,188,0.3);padding-top:12px;">
-                    <span style="color:#3d5a30;font-weight:800;font-size:18px;">
-                      ${window.formatCurrency(p.price)}
-                    </span>
+              <article class="prod-card group" data-product-id="${p.id}" style="background: white; border-radius: 1.5rem; overflow: hidden; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); border: 1px solid #f3f4f6; display: flex; flex-direction: column; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.boxShadow='0 10px 15px -3px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='0 1px 2px 0 rgba(0,0,0,0.05)'">
+                <div style="aspect-ratio: 4/3; background: #f3f4f6; position: relative; overflow: hidden;">
+                  <img src="${sanitize(p.image_url || '')}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" onerror="this.style.background='#f3f4f6';this.removeAttribute('src')">
+                  <div style="position: absolute; top: 16px; right: 16px; background: white; color: #dc2626; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#dc2626" stroke="#dc2626" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
                   </div>
                 </div>
-              </div>`;
+                <div style="padding: 24px; display: flex; flex-direction: column; flex: 1;">
+                  <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">${sanitize(p.category)} &bull; ${sanitize(p.condition)}</div>
+                  <h3 style="font-family: var(--serif, 'Playfair Display', serif); font-size: 20px; color: #111827; margin: 0 0 16px; flex: 1; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${sanitize(p.title)}</h3>
+                  <div style="display: flex; justify-content: space-between; align-items: flex-end; border-top: 1px solid #f3f4f6; padding-top: 16px; margin-top: auto;">
+                    <div>
+                      <div style="font-size: 12px; color: #6b7280; margin-bottom: 4px;">Price</div>
+                      <div style="font-weight: 500; color: #111827;">${window.formatCurrency(p.price)}</div>
+                    </div>
+                  </div>
+                </div>
+              </article>`;
           }).join('') +
           `</div>`;
       }
@@ -524,7 +524,7 @@ export async function renderProfile() {
       });
     }
 
-    const btnNavs = document.querySelectorAll('button[data-route]');
+    const btnNavs = document.querySelectorAll('[data-route]');
     btnNavs.forEach(btn => {
       btn.addEventListener('click', () => {
         const route = btn.getAttribute('data-route');
@@ -540,8 +540,8 @@ export async function renderProfile() {
         tabs.forEach(t => {
           t.classList.remove('active');
           t.style.borderBottomColor = 'transparent';
-          t.style.color = '#78716c';
-          t.style.fontWeight = '600';
+          t.style.color = '#6b7280';
+          t.style.fontWeight = '500';
         });
         contents.forEach(c => c.style.display = 'none');
 
@@ -549,9 +549,9 @@ export async function renderProfile() {
         if (!targetTab) return;
 
         targetTab.classList.add('active');
-        targetTab.style.borderBottomColor = '#3d5a30';
-        targetTab.style.color = '#1c1917';
-        targetTab.style.fontWeight = '700';
+        targetTab.style.borderBottomColor = '#536E5B';
+        targetTab.style.color = '#536E5B';
+        targetTab.style.fontWeight = '500';
 
         const contentEl = document.getElementById(`tab-${targetTab.getAttribute('data-tab')}`);
         if (contentEl) contentEl.style.display = 'block';

@@ -470,52 +470,84 @@ export async function renderSell() {
     const product = allProducts.find(p => p.id === productId);
     if (!product) return;
 
+    const curr = localStorage.getItem('rehome_currency') || 'USD';
+    const displayPrice = curr === 'IDR' ? product.price * 16000 : product.price;
+
     const overlay = document.createElement('div');
     overlay.id = 'edit-modal-overlay';
-    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(28,27,27,0.4);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);padding:16px;';
     overlay.innerHTML = `
-      <div class="glass-panel" style="background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(24px); border-radius: 24px; padding: 48px; max-width: 540px; width: 90%; box-shadow: 0 32px 64px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.6); max-height: 90vh; overflow-y: auto;">
-        <h2 style="font-family: var(--serif); font-size: 28px; font-weight: 500; color: #3d5a30; margin: 0 0 32px;">Edit Listing</h2>
-        <form id="edit-listing-form" style="display: flex; flex-direction: column; gap: 20px;">
-          <div>
-            <label style="font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #78716c; display: block; margin-bottom: 8px;">Title</label>
-            <input name="title" value="${sanitize(product.title)}" style="width: 100%; padding: 16px; border: 1px solid rgba(197, 200, 188, 0.5); border-radius: 12px; font-size: 15px; box-sizing: border-box; outline: none; background: rgba(255,255,255,0.5); transition: 0.3s;" onfocus="this.style.borderColor='#3d5a30';this.style.boxShadow='0 0 0 4px rgba(61, 90, 48, 0.1)'" onblur="this.style.borderColor='rgba(197, 200, 188, 0.5)';this.style.boxShadow='none'" required>
-          </div>
-          <div>
-            <label style="font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #78716c; display: block; margin-bottom: 8px;">Description</label>
-            <textarea name="description" rows="3" style="width: 100%; padding: 16px; border: 1px solid rgba(197, 200, 188, 0.5); border-radius: 12px; font-size: 15px; box-sizing: border-box; outline: none; resize: vertical; background: rgba(255,255,255,0.5); transition: 0.3s;" onfocus="this.style.borderColor='#3d5a30';this.style.boxShadow='0 0 0 4px rgba(61, 90, 48, 0.1)'" onblur="this.style.borderColor='rgba(197, 200, 188, 0.5)';this.style.boxShadow='none'">${sanitize(product.description || '')}</textarea>
-          </div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-            <div>
-              <label style="font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #78716c; display: block; margin-bottom: 8px;">Price ($)</label>
-              <input name="price" type="number" step="0.01" value="${product.price}" style="width: 100%; padding: 16px; border: 1px solid rgba(197, 200, 188, 0.5); border-radius: 12px; font-size: 15px; box-sizing: border-box; outline: none; background: rgba(255,255,255,0.5); transition: 0.3s;" onfocus="this.style.borderColor='#3d5a30';this.style.boxShadow='0 0 0 4px rgba(61, 90, 48, 0.1)'" onblur="this.style.borderColor='rgba(197, 200, 188, 0.5)';this.style.boxShadow='none'" required>
+      <div class="glass-panel" style="background:#fdf8f8;width:100%;max-width:42rem;border-radius:0.75rem;box-shadow:0 4px 40px rgba(0,0,0,0.1);display:flex;flex-direction:column;max-height:90vh;overflow:hidden;transform:transition-all;">
+        <!-- Modal Header -->
+        <div style="padding:24px;border-bottom:1px solid #e5e2e1;display:flex;justify-content:space-between;align-items:center;background:#fdf8f8;position:sticky;top:0;z-index:10;">
+          <h2 style="font-family:var(--serif, 'Playfair Display', serif);font-size:32px;color:#000000;margin:0;font-weight:500;line-height:1.3;">Edit Listing</h2>
+          <button id="close-edit-modal" style="background:transparent;border:none;color:#615e58;cursor:pointer;padding:12px;border-radius:9999px;display:flex;align-items:center;justify-content:center;transition:background 0.3s;" onmouseover="this.style.background='#f1edec'" onmouseout="this.style.background='transparent'">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+        <!-- Modal Body -->
+        <form id="edit-listing-form" style="display:flex;flex-direction:column;flex:1;overflow-y:auto;margin:0;">
+          <div style="padding:24px;display:flex;flex-direction:column;gap:24px;">
+            <!-- Title Field -->
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <label style="font-family:var(--sans, sans-serif);font-size:12px;color:#444748;text-transform:uppercase;letter-spacing:0.1em;font-weight:600;">Title</label>
+              <input name="title" type="text" value="${sanitize(product.title)}" style="width:100%;background:#ffffff;border:1px solid #c4c7c7;color:#1c1b1b;font-family:var(--sans, sans-serif);font-size:16px;border-radius:8px;padding:12px 24px;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='#000000';this.previousElementSibling.style.color='#000000';" onblur="this.style.borderColor='#c4c7c7';this.previousElementSibling.style.color='#444748';" required/>
             </div>
-            <div>
-              <label style="font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #78716c; display: block; margin-bottom: 8px;">Status</label>
-              <select name="status" style="width: 100%; padding: 16px; border: 1px solid rgba(197, 200, 188, 0.5); border-radius: 12px; font-size: 15px; box-sizing: border-box; outline: none; background: rgba(255,255,255,0.5); transition: 0.3s;">
-                <option value="active" ${product.status === 'active' ? 'selected' : ''}>Active</option>
-                <option value="draft" ${product.status === 'draft' ? 'selected' : ''}>Draft</option>
-                <option value="sold" ${product.status === 'sold' ? 'selected' : ''}>Sold</option>
-              </select>
+            <!-- Description Field -->
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <label style="font-family:var(--sans, sans-serif);font-size:12px;color:#444748;text-transform:uppercase;letter-spacing:0.1em;font-weight:600;">Description</label>
+              <textarea name="description" rows="4" style="width:100%;background:#ffffff;border:1px solid #c4c7c7;color:#1c1b1b;font-family:var(--sans, sans-serif);font-size:16px;border-radius:8px;padding:12px 24px;outline:none;transition:border-color 0.2s;resize:vertical;min-height:100px;" onfocus="this.style.borderColor='#000000';this.previousElementSibling.style.color='#000000';" onblur="this.style.borderColor='#c4c7c7';this.previousElementSibling.style.color='#444748';" required>${sanitize(product.description || '')}</textarea>
+            </div>
+            <!-- Price and Status Row -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+              <div style="display:flex;flex-direction:column;gap:12px;">
+                <label style="font-family:var(--sans, sans-serif);font-size:12px;color:#444748;text-transform:uppercase;letter-spacing:0.1em;font-weight:600;">Price (${curr === 'IDR' ? 'Rp' : '$'})</label>
+                <input name="price" type="number" step="${curr === 'IDR' ? '1' : '0.01'}" value="${displayPrice}" style="width:100%;background:#ffffff;border:1px solid #c4c7c7;color:#1c1b1b;font-family:var(--sans, sans-serif);font-size:16px;border-radius:8px;padding:12px 24px;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='#000000';this.previousElementSibling.style.color='#000000';" onblur="this.style.borderColor='#c4c7c7';this.previousElementSibling.style.color='#444748';" required/>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:12px;">
+                <label style="font-family:var(--sans, sans-serif);font-size:12px;color:#444748;text-transform:uppercase;letter-spacing:0.1em;font-weight:600;">Status</label>
+                <div style="position:relative;">
+                  <select name="status" style="width:100%;background:#ffffff;border:1px solid #c4c7c7;color:#1c1b1b;font-family:var(--sans, sans-serif);font-size:16px;border-radius:8px;padding:12px 24px;outline:none;transition:border-color 0.2s;appearance:none;cursor:pointer;" onfocus="this.style.borderColor='#000000';this.parentElement.previousElementSibling.style.color='#000000';" onblur="this.style.borderColor='#c4c7c7';this.parentElement.previousElementSibling.style.color='#444748';">
+                    <option value="active" ${product.status === 'active' ? 'selected' : ''}>Active</option>
+                    <option value="draft" ${product.status === 'draft' ? 'selected' : ''}>Draft</option>
+                    <option value="sold" ${product.status === 'sold' ? 'selected' : ''}>Sold</option>
+                  </select>
+                  <div style="pointer-events:none;position:absolute;inset:0 12px 0 auto;display:flex;align-items:center;color:#615e58;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Category and Condition Row -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+              <div style="display:flex;flex-direction:column;gap:12px;">
+                <label style="font-family:var(--sans, sans-serif);font-size:12px;color:#444748;text-transform:uppercase;letter-spacing:0.1em;font-weight:600;">Category</label>
+                <div style="position:relative;">
+                  <select name="category" style="width:100%;background:#ffffff;border:1px solid #c4c7c7;color:#1c1b1b;font-family:var(--sans, sans-serif);font-size:16px;border-radius:8px;padding:12px 24px;outline:none;transition:border-color 0.2s;appearance:none;cursor:pointer;" onfocus="this.style.borderColor='#000000';this.parentElement.previousElementSibling.style.color='#000000';" onblur="this.style.borderColor='#c4c7c7';this.parentElement.previousElementSibling.style.color='#444748';">
+                    ${['None','Furniture','Seating','Decor','Storage & Tables','Lighting'].map(c => `<option value="${c.toLowerCase()}" ${product.category?.toLowerCase() === c.toLowerCase() ? 'selected' : ''}>${c}</option>`).join('')}
+                  </select>
+                  <div style="pointer-events:none;position:absolute;inset:0 12px 0 auto;display:flex;align-items:center;color:#615e58;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </div>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:12px;">
+                <label style="font-family:var(--sans, sans-serif);font-size:12px;color:#444748;text-transform:uppercase;letter-spacing:0.1em;font-weight:600;">Condition</label>
+                <div style="position:relative;">
+                  <select name="condition" style="width:100%;background:#ffffff;border:1px solid #c4c7c7;color:#1c1b1b;font-family:var(--sans, sans-serif);font-size:16px;border-radius:8px;padding:12px 24px;outline:none;transition:border-color 0.2s;appearance:none;cursor:pointer;" onfocus="this.style.borderColor='#000000';this.parentElement.previousElementSibling.style.color='#000000';" onblur="this.style.borderColor='#c4c7c7';this.parentElement.previousElementSibling.style.color='#444748';">
+                    ${['Pristine','Like New','Excellent','Good','Fair'].map(c => `<option value="${c}" ${product.condition === c ? 'selected' : ''}>${c}</option>`).join('')}
+                  </select>
+                  <div style="pointer-events:none;position:absolute;inset:0 12px 0 auto;display:flex;align-items:center;color:#615e58;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-            <div>
-              <label style="font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #78716c; display: block; margin-bottom: 8px;">Category</label>
-              <select name="category" style="width: 100%; padding: 16px; border: 1px solid rgba(197, 200, 188, 0.5); border-radius: 12px; font-size: 15px; box-sizing: border-box; outline: none; background: rgba(255,255,255,0.5); transition: 0.3s;">
-                ${['None','Furniture','Seating','Decor','Storage & Tables','Lighting'].map(c => `<option value="${c.toLowerCase()}" ${product.category?.toLowerCase() === c.toLowerCase() ? 'selected' : ''}>${c}</option>`).join('')}
-              </select>
-            </div>
-            <div>
-              <label style="font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #78716c; display: block; margin-bottom: 8px;">Condition</label>
-              <select name="condition" style="width: 100%; padding: 16px; border: 1px solid rgba(197, 200, 188, 0.5); border-radius: 12px; font-size: 15px; box-sizing: border-box; outline: none; background: rgba(255,255,255,0.5); transition: 0.3s;">
-                ${['Pristine','Like New','Excellent','Good','Fair'].map(c => `<option value="${c}" ${product.condition === c ? 'selected' : ''}>${c}</option>`).join('')}
-              </select>
-            </div>
-          </div>
-          <div style="display: flex; gap: 16px; margin-top: 16px;">
-            <button type="submit" class="magnetic-btn" style="flex: 1; padding: 16px; background: #3d5a30; color: white; border: none; border-radius: 12px; font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; box-shadow: 0 12px 24px rgba(61,90,48,0.25);">Save Changes</button>
-            <button type="button" id="cancel-edit" class="magnetic-btn" style="padding: 16px 32px; background: white; color: #1c1917; border: 1px solid rgba(197, 200, 188, 0.8); border-radius: 12px; font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; box-shadow: 0 8px 16px rgba(0,0,0,0.05);">Cancel</button>
+          <!-- Modal Footer -->
+          <div style="padding:24px;border-top:1px solid #e5e2e1;display:flex;justify-content:flex-end;gap:16px;background:#ffffff;position:sticky;bottom:0;z-index:10;">
+            <button type="button" id="cancel-edit" style="padding:12px 32px;background:transparent;border:1px solid #c4c7c7;color:#1c1b1b;font-family:var(--sans, sans-serif);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;border-radius:8px;cursor:pointer;transition:background 0.3s;" onmouseover="this.style.background='#f7f3f2'" onmouseout="this.style.background='transparent'">Cancel</button>
+            <button type="submit" style="padding:12px 32px;background:#161e13;border:none;color:#ffffff;font-family:var(--sans, sans-serif);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;border-radius:8px;cursor:pointer;box-shadow:0 2px 10px rgba(22,30,19,0.15);transition:all 0.3s;" onmouseover="this.style.background='#000000';this.style.boxShadow='0 4px 15px rgba(22,30,19,0.25)';" onmouseout="this.style.background='#161e13';this.style.boxShadow='0 2px 10px rgba(22,30,19,0.15)';">Save Changes</button>
           </div>
         </form>
       </div>`;
@@ -523,14 +555,19 @@ export async function renderSell() {
 
     overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
     document.getElementById('cancel-edit')?.addEventListener('click', () => overlay.remove());
+    document.getElementById('close-edit-modal')?.addEventListener('click', () => overlay.remove());
 
     document.getElementById('edit-listing-form')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const fd = new FormData(e.target);
+      
+      const inputPrice = parseFloat(fd.get('price'));
+      const dbPrice = curr === 'IDR' ? inputPrice / 16000 : inputPrice;
+      
       const updates = {
         title: fd.get('title'),
         description: fd.get('description'),
-        price: parseFloat(fd.get('price')),
+        price: dbPrice,
         status: fd.get('status'),
         category: fd.get('category'),
         condition: fd.get('condition'),
