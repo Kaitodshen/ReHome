@@ -168,17 +168,29 @@ export async function renderSell() {
        </div>
 
        <!-- ═══ LISTINGS SECTION ═══ -->
-       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-          <h2 id="section-title" style="font-family: var(--serif); font-size: 28px; margin: 0; color: #1c1917;">My Listings</h2>
-          <div id="listing-filter-tabs" style="display: flex; background: #f5f5f4; border-radius: 8px; padding: 4px; border: 1px solid #e7e5e4; gap: 2px;">
-             <button class="sell-filter-tab active" data-filter="all" style="border: none; background: white; padding: 6px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.05); cursor: pointer; color: #1c1917;">All <span style="background: #e7e5e4; padding: 1px 6px; border-radius: 99px; font-size: 11px; margin-left: 4px;">${allProducts.length}</span></button>
-             <button class="sell-filter-tab" data-filter="draft" style="border: none; background: transparent; padding: 6px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; color: #78716c; cursor: pointer;">Drafts <span style="background: #e7e5e4; padding: 1px 6px; border-radius: 99px; font-size: 11px; margin-left: 4px;">${draftCount}</span></button>
-             <button class="sell-filter-tab" data-filter="sold" style="border: none; background: transparent; padding: 6px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; color: #78716c; cursor: pointer;">Sold <span style="background: #e7e5e4; padding: 1px 6px; border-radius: 99px; font-size: 11px; margin-left: 4px;">${soldCount}</span></button>
-             <button class="sell-filter-tab" data-filter="offers" style="border: none; background: transparent; padding: 6px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; color: #78716c; cursor: pointer;">Offers <span id="offers-badge" style="background: #dcfce7; color: #166534; padding: 1px 6px; border-radius: 99px; font-size: 11px; margin-left: 4px;">0</span></button>
+       <div style="display: flex; flex-direction: column; margin-bottom: 24px; margin-top: 40px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px;">
+            <div>
+              <h2 id="section-title" style="font-family: var(--serif, 'Playfair Display', serif); font-size: 48px; font-weight: 600; margin: 0 0 12px 0; color: #1c1917; letter-spacing: -0.02em;">My Listings</h2>
+              <p style="color: #78716c; margin: 0; font-size: 18px;">Manage your curated collection of high-end pieces.</p>
+            </div>
+            <div id="listing-filter-tabs" style="display: flex; gap: 32px; border-bottom: 1px solid #e7e5e4; padding-bottom: 8px;">
+               <button class="sell-filter-tab active" data-filter="all" style="border: none; background: transparent; padding: 0 0 8px 0; margin-bottom: -9px; border-bottom: 2px solid #1c1917; font-size: 12px; font-weight: 600; cursor: pointer; color: #1c1917; text-transform: uppercase; letter-spacing: 0.1em; transition: 0.2s;">All</button>
+               <button class="sell-filter-tab" data-filter="draft" style="border: none; background: transparent; padding: 0 0 8px 0; margin-bottom: -9px; border-bottom: 2px solid transparent; font-size: 12px; font-weight: 600; color: #78716c; cursor: pointer; text-transform: uppercase; letter-spacing: 0.1em; transition: 0.2s;" onmouseover="this.style.color='#1c1917'" onmouseout="this.className.includes('active')?'':this.style.color='#78716c'">Drafts</button>
+               <button class="sell-filter-tab" data-filter="sold" style="border: none; background: transparent; padding: 0 0 8px 0; margin-bottom: -9px; border-bottom: 2px solid transparent; font-size: 12px; font-weight: 600; color: #78716c; cursor: pointer; text-transform: uppercase; letter-spacing: 0.1em; transition: 0.2s;" onmouseover="this.style.color='#1c1917'" onmouseout="this.className.includes('active')?'':this.style.color='#78716c'">Sold</button>
+               <button class="sell-filter-tab" data-filter="offers" style="border: none; background: transparent; padding: 0 0 8px 0; margin-bottom: -9px; border-bottom: 2px solid transparent; font-size: 12px; font-weight: 600; color: #78716c; cursor: pointer; text-transform: uppercase; letter-spacing: 0.1em; transition: 0.2s;" onmouseover="this.style.color='#1c1917'" onmouseout="this.className.includes('active')?'':this.style.color='#78716c'">Offers <span id="offers-badge"></span></button>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <div id="items-count-label" style="color: #78716c; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;">${allProducts.length} Items</div>
+            <button style="display: flex; align-items: center; gap: 8px; border: none; background: transparent; color: #1c1917; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer; transition: 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
+              Filter
+            </button>
           </div>
        </div>
 
-       <div id="listings-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;"></div>
+       <div id="listings-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;"></div>
        
        <div id="offers-grid" style="display: none; gap: 16px; flex-direction: column;">
          <div class="glass-panel" style="text-align: center; padding: 48px; color: #78716c;">
@@ -319,17 +331,20 @@ export async function renderSell() {
       const hasImg = !!imgSrc;
 
       return `
-        <article class="prod-card glass-panel" data-id="${p.id}" style="position: relative; display: flex; flex-direction: column; cursor: pointer; border-radius: 20px; border: 1px solid rgba(197, 200, 188, 0.4); padding-bottom: 16px; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 12px 24px rgba(61,90,48,0.08)'" onmouseout="this.style.transform='none'; this.style.boxShadow='none'">
-          <div style="height: 280px; margin-bottom: 16px; position: relative;">
-            ${hasImg ? `<img src="${sanitize(imgSrc)}" alt="${sanitize(p.title)}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px 20px 0 0;" onerror="this.style.display='none'">` : `<div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #a8a29e; font-size: 14px; font-weight: 600; background: #f5f4f0; border-radius: 20px 20px 0 0;">No Image</div>`}
-            <div style="position: absolute; top: 16px; left: 16px; padding: 6px 14px; border-radius: 99px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; ${sc.bg}; color: ${sc.color}; box-shadow: 0 4px 12px rgba(0,0,0,0.1); backdrop-filter: blur(8px);">${sc.label}</div>
+        <article class="prod-card" data-id="${p.id}" style="background: white; border-radius: 8px; overflow: hidden; border: 1px solid rgba(197, 200, 188, 0.4); display: flex; flex-direction: column; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(0,0,0,0.02);" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 30px rgba(0,0,0,0.06)'" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 20px rgba(0,0,0,0.02)'">
+          <div style="position: relative; width: 100%; aspect-ratio: 1; background: #f5f4f0; overflow: hidden; display: block;" onmouseover="this.querySelector('.hover-overlay').style.opacity='0.05'; this.querySelector('img').style.transform='scale(1.05)';" onmouseout="this.querySelector('.hover-overlay').style.opacity='0'; this.querySelector('img').style.transform='scale(1)'">
+            <div style="position: absolute; top: 12px; right: 12px; z-index: 10; ${sc.bg}; color: ${sc.color}; padding: 4px 10px; border-radius: 999px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2);">${sc.label}</div>
+            ${hasImg ? `<img src="${sanitize(imgSrc)}" alt="${sanitize(p.title)}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s ease; display: block;" onerror="this.style.display='none'">` : `<div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #a8a29e; font-size: 14px; font-weight: 600;">No Image</div>`}
+            <div class="hover-overlay" style="position: absolute; inset: 0; background: black; opacity: 0; transition: opacity 0.3s ease; pointer-events: none;"></div>
           </div>
-          <div style="padding: 0 20px; display: flex; flex-direction: column; flex-grow: 1;">
-            <span style="font-size: 11px; font-weight: 800; color: #a8a29e; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px;">${sanitize(p.category)} &bull; ${sanitize(p.condition)}</span>
-            <h3 style="margin: 0 0 16px 0; font-size: 17px; font-weight: 700; color: #1c1917; flex-grow: 1; font-family: var(--sans); line-height: 1.4;">${sanitize(p.title)}</h3>
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: auto; border-top: 1px solid rgba(197, 200, 188, 0.3); padding-top: 16px;">
-              <div style="font-size: 20px; font-weight: 800; color: #3d5a30;">${window.formatCurrency(p.price)}</div>
-              <button class="btn-edit-listing magnetic-btn" data-id="${p.id}" style="background: rgba(156, 175, 136, 0.15); border: none; color: #3d5a30; font-size: 12px; font-weight: 800; cursor: pointer; padding: 8px 16px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.5px; transition: 0.2s;" onmouseover="this.style.background='rgba(156, 175, 136, 0.25)'" onmouseout="this.style.background='rgba(156, 175, 136, 0.15)'">Edit</button>
+          <div style="padding: 24px; display: flex; flex-direction: column; flex-grow: 1;">
+            <p style="font-size: 11px; font-weight: 600; color: #78716c; letter-spacing: 1.5px; text-transform: uppercase; margin: 0 0 8px 0; font-family: var(--sans, sans-serif);">${sanitize(p.category)} &bull; ${sanitize(p.condition)}</p>
+            <h3 style="margin: 0 0 24px 0; font-size: 20px; font-weight: 500; color: #1c1917; font-family: var(--serif, 'Playfair Display', serif); line-height: 1.3;">${sanitize(p.title)}</h3>
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto;">
+              <p style="font-size: 16px; font-weight: 400; color: #1c1917; margin: 0; font-family: var(--sans, sans-serif);">${window.formatCurrency(p.price)}</p>
+              <button class="btn-edit-listing" data-id="${p.id}" style="background: transparent; border: none; color: #78716c; cursor: pointer; padding: 6px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s, color 0.2s; margin-bottom: -6px; margin-right: -6px;" onmouseover="this.style.background='#f5f4f0'; this.style.color='#1c1917';" onmouseout="this.style.background='transparent'; this.style.color='#78716c';">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+              </button>
             </div>
           </div>
         </article>`;
@@ -337,11 +352,11 @@ export async function renderSell() {
 
     // New listing card
     html += `
-      <div id="btn-create-listing" style="border: 2px dashed #d6d3d1; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 350px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.borderColor='#9caf88'; this.style.backgroundColor='#fbfaf9'" onmouseout="this.style.borderColor='#d6d3d1'; this.style.backgroundColor='transparent'">
-         <div style="width: 48px; height: 48px; border-radius: 50%; border: 1px dashed #a8a29e; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; color: #78716c;">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      <div id="btn-create-listing" style="border: 1px dashed #d6d3d1; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; min-height: 250px; cursor: pointer; transition: all 0.3s ease; background: transparent;" onmouseover="this.style.borderColor='#1c1917'; this.style.backgroundColor='#fdf8f8'" onmouseout="this.style.borderColor='#d6d3d1'; this.style.backgroundColor='transparent'">
+         <div style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid #e7e5e4; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; color: #1c1917; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
          </div>
-         <h4 style="margin: 0 0 8px 0; font-size: 15px; font-weight: 700; color: #57534e;">Create New Listing</h4>
+         <h4 style="margin: 0; font-size: 13px; font-weight: 600; color: #1c1917; font-family: var(--sans, sans-serif); letter-spacing: 0.5px; text-transform: uppercase;">Create Listing</h4>
       </div>`;
 
     grid.innerHTML = html;
@@ -366,15 +381,22 @@ export async function renderSell() {
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
       tabs.forEach(t => {
-        t.style.background = 'transparent';
+        t.classList.remove('active');
+        t.style.borderBottomColor = 'transparent';
         t.style.color = '#78716c';
-        t.style.boxShadow = 'none';
       });
-      tab.style.background = 'white';
+      tab.classList.add('active');
+      tab.style.borderBottomColor = '#1c1917';
       tab.style.color = '#1c1917';
-      tab.style.boxShadow = '0 2px 4px rgba(0,0,0,0.05)';
       
       const filter = tab.dataset.filter;
+      const countEl = document.getElementById('items-count-label');
+      if (countEl) {
+        if (filter === 'all') countEl.textContent = `${allProducts.length} Items`;
+        else if (filter === 'draft') countEl.textContent = `${draftCount} Items`;
+        else if (filter === 'sold') countEl.textContent = `${soldCount} Items`;
+      }
+
       if (filter === 'offers') {
         document.getElementById('listings-grid').style.display = 'none';
         document.getElementById('offers-grid').style.display = 'grid';
